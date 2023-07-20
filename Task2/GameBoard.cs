@@ -52,6 +52,13 @@ namespace Task2
       {
         return false;
       }
+
+      var cellValue = this.boardCell[cell - 1];
+      if(cellValue == 'X' || cellValue == 'O')
+      {
+        return false;
+      }
+
       if (this.isFirst)
       {
         this.boardCell[cell - 1] = 'X';

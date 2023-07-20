@@ -5,19 +5,32 @@
     static void Main(string[] args)
     {
       int cell;
-      var gameBoard = new GameBoard();
-      while (true)
-      {
-        cell = Console.ReadKey().KeyChar - '0';
-        if(gameBoard.TurnPlayer(cell))
+      char newGame = 'д';
+      while (newGame.Equals('д')) 
+      { 
+        var gameBoard = new GameBoard();
+        Console.Write("Новая игра - КрестикиНолики.");
+        gameBoard.DrawBoard();
+        int turn = 0;
+        while (turn < 9)
         {
-          gameBoard.DrawBoard();
-        } 
-        else
-        {
-          Console.WriteLine(" - неверный ход.");
+          Console.Write("Введите номер ячейки для хода: ");
+          cell = Console.ReadKey().KeyChar - '0';
+          if (gameBoard.TurnPlayer(cell))
+          {
+            gameBoard.DrawBoard();
+            turn++;
+          }
+          else
+          {
+            Console.WriteLine(" - неверный ход.");
+          }
         }
+        Console.Write("Игра завершена, хотите сыграть еще? (д/н) ");
+        newGame = Console.ReadKey().KeyChar;
+        Console.WriteLine();
       }
+      Console.WriteLine("Хорошего дня!");
     }
   }
 }
