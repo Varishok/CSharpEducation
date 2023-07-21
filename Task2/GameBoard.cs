@@ -70,5 +70,59 @@ namespace Task2
       this.isFirst = !this.isFirst;
       return true;
     }
+
+    /// <summary>
+    /// Проверка выигрыша.
+    /// </summary>
+    /// <returns>0 - победитель неопределен. 1 - победили крестики. -1 - победили нолики.</returns>
+    public int CheckWinner()
+    {
+      string winningCombination = "";
+      if (this.boardCell[0].Equals(this.boardCell[1]) && this.boardCell[0].Equals(this.boardCell[2]))
+      {
+        winningCombination += "012";
+      }
+      if (this.boardCell[3].Equals(this.boardCell[4]) && this.boardCell[3].Equals(this.boardCell[5]))
+      {
+        winningCombination += "345";
+      }
+      if (this.boardCell[6].Equals(this.boardCell[7]) && this.boardCell[6].Equals(this.boardCell[8]))
+      {
+        winningCombination += "678";
+      }
+      if (this.boardCell[0].Equals(this.boardCell[3]) && this.boardCell[0].Equals(this.boardCell[6]))
+      {
+        winningCombination += "036";
+      }
+      if (this.boardCell[1].Equals(this.boardCell[4]) && this.boardCell[1].Equals(this.boardCell[7]))
+      {
+        winningCombination += "147";
+      }
+      if (this.boardCell[2].Equals(this.boardCell[5]) && this.boardCell[2].Equals(this.boardCell[8]))
+      {
+        winningCombination += "258";
+      }
+      if (this.boardCell[0].Equals(this.boardCell[4]) && this.boardCell[0].Equals(this.boardCell[8]))
+      {
+        winningCombination += "048";
+      }
+      if (this.boardCell[2].Equals(this.boardCell[4]) && this.boardCell[2].Equals(this.boardCell[6]))
+      {
+        winningCombination += "246";
+      }
+      if (!winningCombination.Equals(""))
+      {
+        int cellIndex = winningCombination[0] - '0';
+        if (this.boardCell[cellIndex].Equals('X'))
+        {
+          return 1;
+        }
+        else
+        {
+          return -1;
+        }
+      }
+      return 0;
+    }
   }
 }
