@@ -16,6 +16,14 @@ namespace Task2
     /// Ход первого игрока.
     /// </summary>
     private bool isFirst = true;
+    /// <summary>
+    /// Цвет ячеек поля.
+    /// </summary>
+    private ConsoleColor[] cellColor;
+    /// <summary>
+    /// Изначальный цвет ячейки.
+    /// </summary>
+    private const ConsoleColor defaultColor = ConsoleColor.White;
 
     /// <summary>
     /// Инициализая игры.
@@ -23,6 +31,11 @@ namespace Task2
     public GameBoard()
     {
       this.boardCell = new char[]{ '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+      this.cellColor = new ConsoleColor[] {
+        defaultColor, defaultColor, defaultColor, 
+        defaultColor, defaultColor, defaultColor,
+        defaultColor, defaultColor, defaultColor
+      };
     }
 
     /// <summary>
@@ -35,10 +48,27 @@ namespace Task2
       for(int i = 0; i < 3; i ++)
       {
         Console.WriteLine("|   |   |   |");
-        Console.WriteLine("| " + this.boardCell[3*i] + " | " + this.boardCell[3*i + 1] + " | " + this.boardCell[3*i + 2] + " |");
+        Console.Write("| ");
+        for (int j = 0; j < 3; j++)
+        {
+          this.DrawCell(3 * i + j);
+          Console.Write(" | ");
+        }
+        Console.WriteLine();
         Console.WriteLine("|   |   |   |");
         Console.WriteLine("-------------");
       }
+    }
+
+    /// <summary>
+    /// Отрисовка ячейки с цветом.
+    /// </summary>
+    /// <param name="cellIndex">Индекс ячейки.</param>
+    private void DrawCell(int cellIndex)
+    {
+      Console.ForegroundColor = this.cellColor[cellIndex];
+      Console.Write(this.boardCell[cellIndex]);
+      Console.ResetColor();
     }
 
     /// <summary>
@@ -62,10 +92,12 @@ namespace Task2
       if (this.isFirst)
       {
         this.boardCell[cell - 1] = 'X';
+        this.cellColor[cell - 1] = ConsoleColor.Red;
       }
       else
       {
         this.boardCell[cell - 1] = 'O';
+        this.cellColor[cell - 1] = ConsoleColor.Green;
       }
       this.isFirst = !this.isFirst;
       return true;
@@ -112,7 +144,12 @@ namespace Task2
       }
       if (!winningCombination.Equals(""))
       {
-        int cellIndex = winningCombination[0] - '0';
+        int cellIndex = 0;
+        foreach (var cell in winningCombination) 
+        {
+          cellIndex = cell - '0';
+          this.cellColor[cellIndex] = ConsoleColor.Yellow;
+        }
         if (this.boardCell[cellIndex].Equals('X'))
         {
           return 1;

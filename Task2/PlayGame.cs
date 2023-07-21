@@ -33,6 +33,7 @@
               {
                 Console.WriteLine("Победили нолики");
               }
+              gameBoard.DrawBoard();
               break;
             }
             if (gameBoard.isDraw())
