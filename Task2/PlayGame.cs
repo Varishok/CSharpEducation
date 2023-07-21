@@ -35,6 +35,10 @@
               }
               break;
             }
+            if (gameBoard.isDraw())
+            {
+              break;
+            }
           }
           else
           {

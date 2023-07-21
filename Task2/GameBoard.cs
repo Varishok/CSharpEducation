@@ -124,5 +124,80 @@ namespace Task2
       }
       return 0;
     }
+
+    /// <summary>
+    /// Проверка ничьи.
+    /// </summary>
+    /// <returns>true - ничья. false - ничьи нет.</returns>
+    public bool isDraw()
+    {
+      if(!this.boardCell[0].Equals('O') && !this.boardCell[1].Equals('O') && !this.boardCell[2].Equals('O')) //012 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[0].Equals('O') && !this.boardCell[3].Equals('O') && !this.boardCell[6].Equals('O')) //036 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[0].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[8].Equals('O')) //048 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[1].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[7].Equals('O')) //147 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[2].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[6].Equals('O')) //246 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[2].Equals('O') && !this.boardCell[5].Equals('O') && !this.boardCell[8].Equals('O')) //258 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[3].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[5].Equals('O')) //345 - X или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[6].Equals('O') && !this.boardCell[7].Equals('O') && !this.boardCell[8].Equals('O')) //678 - X или пусто
+      {
+        return false;
+      }
+
+      if (!this.boardCell[0].Equals('X') && !this.boardCell[1].Equals('X') && !this.boardCell[2].Equals('X')) //012 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[0].Equals('X') && !this.boardCell[3].Equals('X') && !this.boardCell[6].Equals('X')) //036 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[0].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[8].Equals('X')) //048 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[1].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[7].Equals('X')) //147 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[2].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[6].Equals('X')) //246 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[2].Equals('X') && !this.boardCell[5].Equals('X') && !this.boardCell[8].Equals('X')) //258 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[3].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[5].Equals('X')) //345 - O или пусто
+      {
+        return false;
+      }
+      if (!this.boardCell[6].Equals('X') && !this.boardCell[7].Equals('X') && !this.boardCell[8].Equals('X')) //678 - O или пусто
+      {
+        return false;
+      }
+
+      return true;
+    }
   }
 }
