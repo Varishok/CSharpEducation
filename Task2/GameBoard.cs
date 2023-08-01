@@ -17,11 +17,6 @@ namespace Task2
     private char[] boardCell;
 
     /// <summary>
-    /// Ход первого игрока.
-    /// </summary>
-    private bool isFirst = true;
-
-    /// <summary>
     /// Цвет ячеек поля.
     /// </summary>
     private ConsoleColor[] cellColor;
@@ -34,12 +29,12 @@ namespace Task2
     /// <summary>
     /// Символ первого игрока. (X)
     /// </summary>
-    private const char firstPlayer = 'X';
+    public const char firstPlayer = 'X';
 
     /// <summary>
     /// Символ второго игрока. (O)
     /// </summary>
-    private const char secondPlayer = 'O';
+    public const char secondPlayer = 'O';
 
     /// <summary>
     /// Статусы игры.
@@ -103,8 +98,9 @@ namespace Task2
     /// Ходы игроков.
     /// </summary>
     /// <param name="cell">Заменяемое поле.</param>
+    /// <param name="player">Игрок, который ходит.</param>
     /// <returns>true - если все прошло успешно, false - в противном случае.</returns>
-    public bool TurnPlayer(int cell)
+    public bool TurnPlayer(int cell, char player)
     {
       if(cell < 1 || cell > 9)
       {
@@ -116,18 +112,22 @@ namespace Task2
       {
         return false;
       }
-
-      if (this.isFirst)
+      
+      if (player.Equals(firstPlayer))
       {
-        this.boardCell[cell - 1] = firstPlayer;
         this.cellColor[cell - 1] = ConsoleColor.Red;
+      }
+      else if (player.Equals(secondPlayer))
+      {
+        this.cellColor[cell - 1] = ConsoleColor.Green;
       }
       else
       {
-        this.boardCell[cell - 1] = secondPlayer;
-        this.cellColor[cell - 1] = ConsoleColor.Green;
+        return false;
       }
-      this.isFirst = !this.isFirst;
+
+      this.boardCell[cell - 1] = player;
+
       return true;
     }
 
