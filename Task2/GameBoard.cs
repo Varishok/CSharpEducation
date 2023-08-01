@@ -113,11 +113,11 @@ namespace Task2
         return false;
       }
       
-      if (player.Equals(firstPlayer))
+      if(player.Equals(firstPlayer))
       {
         this.cellColor[cell - 1] = ConsoleColor.Red;
       }
-      else if (player.Equals(secondPlayer))
+      else if(player.Equals(secondPlayer))
       {
         this.cellColor[cell - 1] = ConsoleColor.Green;
       }
@@ -138,39 +138,39 @@ namespace Task2
     public GameStatus CheckWinner()
     {
       string winningCombination = "";
-      if (this.boardCell[0].Equals(this.boardCell[1]) && this.boardCell[0].Equals(this.boardCell[2]))
+      if(this.boardCell[0].Equals(this.boardCell[1]) && this.boardCell[0].Equals(this.boardCell[2]))
       {
         winningCombination += "012";
       }
-      if (this.boardCell[3].Equals(this.boardCell[4]) && this.boardCell[3].Equals(this.boardCell[5]))
+      if(this.boardCell[3].Equals(this.boardCell[4]) && this.boardCell[3].Equals(this.boardCell[5]))
       {
         winningCombination += "345";
       }
-      if (this.boardCell[6].Equals(this.boardCell[7]) && this.boardCell[6].Equals(this.boardCell[8]))
+      if(this.boardCell[6].Equals(this.boardCell[7]) && this.boardCell[6].Equals(this.boardCell[8]))
       {
         winningCombination += "678";
       }
-      if (this.boardCell[0].Equals(this.boardCell[3]) && this.boardCell[0].Equals(this.boardCell[6]))
+      if(this.boardCell[0].Equals(this.boardCell[3]) && this.boardCell[0].Equals(this.boardCell[6]))
       {
         winningCombination += "036";
       }
-      if (this.boardCell[1].Equals(this.boardCell[4]) && this.boardCell[1].Equals(this.boardCell[7]))
+      if(this.boardCell[1].Equals(this.boardCell[4]) && this.boardCell[1].Equals(this.boardCell[7]))
       {
         winningCombination += "147";
       }
-      if (this.boardCell[2].Equals(this.boardCell[5]) && this.boardCell[2].Equals(this.boardCell[8]))
+      if(this.boardCell[2].Equals(this.boardCell[5]) && this.boardCell[2].Equals(this.boardCell[8]))
       {
         winningCombination += "258";
       }
-      if (this.boardCell[0].Equals(this.boardCell[4]) && this.boardCell[0].Equals(this.boardCell[8]))
+      if(this.boardCell[0].Equals(this.boardCell[4]) && this.boardCell[0].Equals(this.boardCell[8]))
       {
         winningCombination += "048";
       }
-      if (this.boardCell[2].Equals(this.boardCell[4]) && this.boardCell[2].Equals(this.boardCell[6]))
+      if(this.boardCell[2].Equals(this.boardCell[4]) && this.boardCell[2].Equals(this.boardCell[6]))
       {
         winningCombination += "246";
       }
-      if (!winningCombination.Equals(""))
+      if(!winningCombination.Equals(""))
       {
         int cellIndex = 0;
         foreach (var cell in winningCombination) 
@@ -178,7 +178,7 @@ namespace Task2
           cellIndex = cell - '0';
           this.cellColor[cellIndex] = ConsoleColor.Yellow;
         }
-        if (this.boardCell[cellIndex].Equals(firstPlayer))
+        if(this.boardCell[cellIndex].Equals(firstPlayer))
         {
           return GameStatus.XWin;
         }

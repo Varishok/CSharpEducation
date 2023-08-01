@@ -30,7 +30,7 @@
             turn++;
 
             gameStatus = gameBoard.CheckWinner();
-            if(gameStatus != 0) 
+            if(gameStatus != GameBoard.GameStatus.InProgress) 
             { 
               if(gameStatus == GameBoard.GameStatus.XWin)
               {
