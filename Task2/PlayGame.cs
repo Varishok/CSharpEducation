@@ -36,7 +36,7 @@
               gameBoard.DrawBoard();
               break;
             }
-            if (gameBoard.isDraw())
+            if (gameBoard.IsDraw())
             {
               break;
             }

@@ -12,14 +12,17 @@ namespace Task2
     /// Значения ячеек игрового поля.
     /// </summary>
     private char[] boardCell;
+
     /// <summary>
     /// Ход первого игрока.
     /// </summary>
     private bool isFirst = true;
+
     /// <summary>
     /// Цвет ячеек поля.
     /// </summary>
     private ConsoleColor[] cellColor;
+
     /// <summary>
     /// Изначальный цвет ячейки.
     /// </summary>
@@ -166,7 +169,7 @@ namespace Task2
     /// Проверка ничьи.
     /// </summary>
     /// <returns>true - ничья. false - ничьи нет.</returns>
-    public bool isDraw()
+    public bool IsDraw()
     {
       if(!this.boardCell[0].Equals('O') && !this.boardCell[1].Equals('O') && !this.boardCell[2].Equals('O')) //012 - X или пусто
       {
