@@ -42,6 +42,18 @@ namespace Task2
     private const char secondPlayer = 'O';
 
     /// <summary>
+    /// Статусы игры.
+    /// 0 - игра идет. 1 - победили крестики. -1 - победили нолики. 2 - ничья.
+    /// </summary>
+    public enum GameStatus
+    {
+      InProgress = 0,
+      XWin = 1,
+      OWin = -1, 
+      Draw = 2,
+    }
+
+    /// <summary>
     /// Инициализая игры.
     /// </summary>
     public GameBoard()
@@ -122,8 +134,8 @@ namespace Task2
     /// <summary>
     /// Проверка выигрыша.
     /// </summary>
-    /// <returns>0 - победитель неопределен. 1 - победили крестики. -1 - победили нолики.</returns>
-    public int CheckWinner()
+    /// <returns>InProgress - победитель неопределен. XWin - победили крестики. OWin - победили нолики.</returns>
+    public GameStatus CheckWinner()
     {
       string winningCombination = "";
       if (this.boardCell[0].Equals(this.boardCell[1]) && this.boardCell[0].Equals(this.boardCell[2]))
@@ -168,21 +180,21 @@ namespace Task2
         }
         if (this.boardCell[cellIndex].Equals(firstPlayer))
         {
-          return 1;
+          return GameStatus.XWin;
         }
         else
         {
-          return -1;
+          return GameStatus.OWin;
         }
       }
-      return 0;
+      return GameStatus.InProgress;
     }
 
     /// <summary>
     /// Проверка ничьи.
     /// </summary>
-    /// <returns>true - ничья. false - ничьи нет.</returns>
-    public bool IsDraw()
+    /// <returns>Draw - ничья. InProgress - ничьи нет.</returns>
+    public GameStatus IsDraw()
     {
       if(!this.boardCell[0].Equals(secondPlayer) && !this.boardCell[1].Equals(secondPlayer) && !this.boardCell[2].Equals(secondPlayer) || //012 - X или пусто
          !this.boardCell[0].Equals(secondPlayer) && !this.boardCell[3].Equals(secondPlayer) && !this.boardCell[6].Equals(secondPlayer) || //036 - X или пусто
@@ -192,19 +204,19 @@ namespace Task2
          !this.boardCell[2].Equals(secondPlayer) && !this.boardCell[5].Equals(secondPlayer) && !this.boardCell[8].Equals(secondPlayer) || //258 - X или пусто
          !this.boardCell[3].Equals(secondPlayer) && !this.boardCell[4].Equals(secondPlayer) && !this.boardCell[5].Equals(secondPlayer) || //345 - X или пусто
          !this.boardCell[6].Equals(secondPlayer) && !this.boardCell[7].Equals(secondPlayer) && !this.boardCell[8].Equals(secondPlayer) || //678 - X или пусто
-         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[2].Equals(firstPlayer) || //012 - O или пусто
-         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) || //036 - O или пусто
-         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) || //048 - O или пусто
-         !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) || //147 - O или пусто
-         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) || //246 - O или пусто
-         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) || //258 - O или пусто
-         !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) || //345 - O или пусто
-         !this.boardCell[6].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer))   //678 - O или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[2].Equals(firstPlayer) ||    //012 - O или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) ||    //036 - O или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) ||    //048 - O или пусто
+         !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) ||    //147 - O или пусто
+         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) ||    //246 - O или пусто
+         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) ||    //258 - O или пусто
+         !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) ||    //345 - O или пусто
+         !this.boardCell[6].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer))      //678 - O или пусто
       {
-        return false;
+        return GameStatus.InProgress;
       }
 
-      return true;
+      return GameStatus.Draw;
     }
   }
 }

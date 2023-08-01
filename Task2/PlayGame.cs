@@ -13,7 +13,7 @@
         Console.Write("Новая игра - КрестикиНолики.");
         gameBoard.DrawBoard();
         int turn = 0;
-        int gameStatus = 0;
+        GameBoard.GameStatus gameStatus = GameBoard.GameStatus.InProgress;
         while (turn < 9)
         {
           Console.Write("Введите номер ячейки для хода: ");
@@ -25,7 +25,7 @@
             gameStatus = gameBoard.CheckWinner();
             if(gameStatus != 0) 
             { 
-              if(gameStatus == 1)
+              if(gameStatus == GameBoard.GameStatus.XWin)
               {
                 Console.WriteLine("Победили крестики.");
               }
@@ -36,7 +36,8 @@
               gameBoard.DrawBoard();
               break;
             }
-            if (gameBoard.IsDraw())
+            gameStatus = gameBoard.IsDraw();
+            if (gameStatus == GameBoard.GameStatus.Draw)
             {
               break;
             }
@@ -46,7 +47,7 @@
             Console.WriteLine(" - неверный ход.");
           }
         }
-        if (gameStatus == 0)
+        if (gameStatus == GameBoard.GameStatus.Draw)
         {
           Console.WriteLine("Ничья.");
         }
