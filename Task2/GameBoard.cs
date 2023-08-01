@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
+  /// <summary>
+  /// Игра крестики-нолики.
+  /// </summary>
   internal class GameBoard
   {
     /// <summary>
@@ -27,6 +30,16 @@ namespace Task2
     /// Изначальный цвет ячейки.
     /// </summary>
     private const ConsoleColor defaultColor = ConsoleColor.White;
+
+    /// <summary>
+    /// Символ первого игрока. (X)
+    /// </summary>
+    private const char firstPlayer = 'X';
+
+    /// <summary>
+    /// Символ второго игрока. (O)
+    /// </summary>
+    private const char secondPlayer = 'O';
 
     /// <summary>
     /// Инициализая игры.
@@ -87,19 +100,19 @@ namespace Task2
       }
 
       var cellValue = this.boardCell[cell - 1];
-      if(cellValue == 'X' || cellValue == 'O')
+      if(cellValue == firstPlayer || cellValue == secondPlayer)
       {
         return false;
       }
 
       if (this.isFirst)
       {
-        this.boardCell[cell - 1] = 'X';
+        this.boardCell[cell - 1] = firstPlayer;
         this.cellColor[cell - 1] = ConsoleColor.Red;
       }
       else
       {
-        this.boardCell[cell - 1] = 'O';
+        this.boardCell[cell - 1] = secondPlayer;
         this.cellColor[cell - 1] = ConsoleColor.Green;
       }
       this.isFirst = !this.isFirst;
@@ -153,7 +166,7 @@ namespace Task2
           cellIndex = cell - '0';
           this.cellColor[cellIndex] = ConsoleColor.Yellow;
         }
-        if (this.boardCell[cellIndex].Equals('X'))
+        if (this.boardCell[cellIndex].Equals(firstPlayer))
         {
           return 1;
         }
@@ -171,68 +184,22 @@ namespace Task2
     /// <returns>true - ничья. false - ничьи нет.</returns>
     public bool IsDraw()
     {
-      if(!this.boardCell[0].Equals('O') && !this.boardCell[1].Equals('O') && !this.boardCell[2].Equals('O')) //012 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[0].Equals('O') && !this.boardCell[3].Equals('O') && !this.boardCell[6].Equals('O')) //036 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[0].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[8].Equals('O')) //048 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[1].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[7].Equals('O')) //147 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[2].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[6].Equals('O')) //246 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[2].Equals('O') && !this.boardCell[5].Equals('O') && !this.boardCell[8].Equals('O')) //258 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[3].Equals('O') && !this.boardCell[4].Equals('O') && !this.boardCell[5].Equals('O')) //345 - X или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[6].Equals('O') && !this.boardCell[7].Equals('O') && !this.boardCell[8].Equals('O')) //678 - X или пусто
-      {
-        return false;
-      }
-
-      if (!this.boardCell[0].Equals('X') && !this.boardCell[1].Equals('X') && !this.boardCell[2].Equals('X')) //012 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[0].Equals('X') && !this.boardCell[3].Equals('X') && !this.boardCell[6].Equals('X')) //036 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[0].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[8].Equals('X')) //048 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[1].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[7].Equals('X')) //147 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[2].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[6].Equals('X')) //246 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[2].Equals('X') && !this.boardCell[5].Equals('X') && !this.boardCell[8].Equals('X')) //258 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[3].Equals('X') && !this.boardCell[4].Equals('X') && !this.boardCell[5].Equals('X')) //345 - O или пусто
-      {
-        return false;
-      }
-      if (!this.boardCell[6].Equals('X') && !this.boardCell[7].Equals('X') && !this.boardCell[8].Equals('X')) //678 - O или пусто
+      if(!this.boardCell[0].Equals(secondPlayer) && !this.boardCell[1].Equals(secondPlayer) && !this.boardCell[2].Equals(secondPlayer) || //012 - X или пусто
+         !this.boardCell[0].Equals(secondPlayer) && !this.boardCell[3].Equals(secondPlayer) && !this.boardCell[6].Equals(secondPlayer) || //036 - X или пусто
+         !this.boardCell[0].Equals(secondPlayer) && !this.boardCell[4].Equals(secondPlayer) && !this.boardCell[8].Equals(secondPlayer) || //048 - X или пусто
+         !this.boardCell[1].Equals(secondPlayer) && !this.boardCell[4].Equals(secondPlayer) && !this.boardCell[7].Equals(secondPlayer) || //147 - X или пусто
+         !this.boardCell[2].Equals(secondPlayer) && !this.boardCell[4].Equals(secondPlayer) && !this.boardCell[6].Equals(secondPlayer) || //246 - X или пусто
+         !this.boardCell[2].Equals(secondPlayer) && !this.boardCell[5].Equals(secondPlayer) && !this.boardCell[8].Equals(secondPlayer) || //258 - X или пусто
+         !this.boardCell[3].Equals(secondPlayer) && !this.boardCell[4].Equals(secondPlayer) && !this.boardCell[5].Equals(secondPlayer) || //345 - X или пусто
+         !this.boardCell[6].Equals(secondPlayer) && !this.boardCell[7].Equals(secondPlayer) && !this.boardCell[8].Equals(secondPlayer) || //678 - X или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[2].Equals(firstPlayer) || //012 - O или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) || //036 - O или пусто
+         !this.boardCell[0].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) || //048 - O или пусто
+         !this.boardCell[1].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) || //147 - O или пусто
+         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[6].Equals(firstPlayer) || //246 - O или пусто
+         !this.boardCell[2].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer) || //258 - O или пусто
+         !this.boardCell[3].Equals(firstPlayer) && !this.boardCell[4].Equals(firstPlayer) && !this.boardCell[5].Equals(firstPlayer) || //345 - O или пусто
+         !this.boardCell[6].Equals(firstPlayer) && !this.boardCell[7].Equals(firstPlayer) && !this.boardCell[8].Equals(firstPlayer))   //678 - O или пусто
       {
         return false;
       }
