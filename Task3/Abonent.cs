@@ -20,6 +20,22 @@ namespace Task3
     private string phoneNumber;
 
     /// <summary>
+    /// Get the abonent's name.
+    /// </summary>
+    public string GetName 
+    { 
+      get { return name; } 
+    }
+
+    /// <summary>
+    /// Get the abonent's phone number.
+    /// </summary>
+    public string GetPhoneNumber 
+    { 
+      get { return phoneNumber; } 
+    }
+
+    /// <summary>
     /// Init.
     /// </summary>
     /// <param name="name">The abonent's name.</param>
