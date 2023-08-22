@@ -45,9 +45,14 @@
     /// <param name="phoneNumber">Abonent's phone number.</param>
     public bool AddAbonent(string name, string phoneNumber)
     {
-      var ab = new Abonent(name, phoneNumber);
-      this.abonents.Add(ab);
-      return true;
+      var findAbonent = FindAbonentByPhone(phoneNumber);
+      if (findAbonent == null)
+      {
+        var ab = new Abonent(name, phoneNumber);
+        this.abonents.Add(ab);
+        return true;
+      }
+      return false;
     }
 
     /// <summary>
@@ -84,8 +89,8 @@
     /// <returns>A list of all abonents with the specified name.</returns>
     public List<Abonent> FindAbonentsByName(string name)
     {
-      var abonents = this.abonents.FindAll(abonents => abonents.GetName.Equals(name));
-      return abonents;
+      var findAbonents = this.abonents.FindAll(abonent => abonent.GetName.Equals(name));
+      return findAbonents;
     }
   }
 }
