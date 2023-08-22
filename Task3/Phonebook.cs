@@ -1,9 +1,19 @@
 ﻿using System.Collections;
+using System.Text;
 
 namespace Task3
 {
   internal class Phonebook : IEnumerable
   {
+
+    #region Const
+
+    /// <summary>
+    /// File Path.
+    /// </summary>
+    private const string path = "./phonebook.txt";
+
+    #endregion
 
     #region Variables
 
@@ -37,7 +47,11 @@ namespace Task3
     public Abonent this[int i]
     {
       get => this.abonents[i];
-      set => this.abonents[i] = value;
+      set 
+      {
+        this.abonents[i] = value;
+        SaveAll();
+      }
     }
 
     #endregion
@@ -47,7 +61,10 @@ namespace Task3
     /// <summary>
     /// Init.
     /// </summary>
-    private Phonebook() { }
+    private Phonebook()
+    {
+      Read();
+    }
 
     /// <summary>
     /// Singleton static init.
@@ -78,6 +95,7 @@ namespace Task3
       {
         var ab = new Abonent(name, phoneNumber);
         this.abonents.Add(ab);
+        Save(ab);
         return true;
       }
       return false;
@@ -94,6 +112,7 @@ namespace Task3
       if (findAbonent != null)
       {
         this.abonents.Remove(findAbonent);
+        SaveAll();
         return true;
       }
       return false;
@@ -149,5 +168,57 @@ namespace Task3
 
     #endregion
 
+    #region FileSystem
+
+    /// <summary>
+    /// Save abonent to a file.
+    /// </summary>
+    /// <param name="abonent">Saved abonent.</param>
+    /// <exception cref="Exception">Errors when writing to a file.</exception>
+    private void Save(Abonent abonent)
+    {
+      string text = abonent.ToString() + "\n";
+      try
+      {
+        File.AppendAllText(path, text, Encoding.Unicode); // Create or write in file
+      }
+      catch 
+      {
+        throw new Exception("Can't write in file.");
+      }
+    }
+
+    /// <summary>
+    /// Save all abonents to a file.
+    /// </summary>
+    private void SaveAll()
+    {
+      File.Delete(path);
+      foreach (var abonent in this.abonents)
+      {
+        Save(abonent);
+      }
+    }
+
+    /// <summary>
+    /// Reading abonents from a file.
+    /// </summary>
+    private void Read()
+    {
+      if(File.Exists(path))
+      {
+        string[] lines = File.ReadAllLines(path);
+        lines = lines.SkipLast(1).ToArray(); // The last line is blank.
+
+        foreach (string line in lines)
+        {
+          string[] split = line.Split(" - ");
+          var abonent = new Abonent(split[1], split[0]); // Abonent's in file is "phone - name"
+          this.abonents.Add(abonent);
+        }
+      }
+    }
+
+    #endregion
   }
 }
