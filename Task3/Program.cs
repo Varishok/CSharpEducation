@@ -18,7 +18,22 @@ namespace Task3
   {
     static void Main()
     {
-      
+      var phoneBook = Phonebook.GetInstance();
+      phoneBook.AddAbonent("Test", "123456");
+      phoneBook.AddAbonent("Test2", "1234567");
+      phoneBook.AddAbonent("Test3", "12345678");
+      foreach (var abonent in phoneBook)
+      {
+        Console.WriteLine(abonent.ToString());
+      }
+      Console.WriteLine();
+      phoneBook.RemoveAbonent("123456");
+      foreach (var abonent in phoneBook)
+      {
+        Console.WriteLine(abonent.ToString());
+      }
+      Abonent varish = new Abonent("Varish", "123456");
+      phoneBook[0] = varish;
     }
   }
 }

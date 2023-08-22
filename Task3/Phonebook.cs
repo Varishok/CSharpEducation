@@ -32,14 +32,6 @@ namespace Task3
     #region Properties
 
     /// <summary>
-    /// Get list of abonents.
-    /// </summary>
-    public List<Abonent> GetAbonents 
-    {
-      get { return abonents; }
-    }
-
-    /// <summary>
     /// Indexer declaration.
     /// </summary>
     /// <param name="i">Item's index.</param>
