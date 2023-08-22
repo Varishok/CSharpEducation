@@ -9,6 +9,9 @@ namespace Task3
 {
   internal class Abonent
   {
+
+    #region Variables
+
     /// <summary>
     /// The abonent's name.
     /// </summary>
@@ -18,6 +21,10 @@ namespace Task3
     /// The abonent's phone number.
     /// </summary>
     private string phoneNumber;
+
+    #endregion
+
+    #region Properties
 
     /// <summary>
     /// Get the abonent's name.
@@ -35,6 +42,10 @@ namespace Task3
       get { return phoneNumber; } 
     }
 
+    #endregion
+
+    #region Init
+
     /// <summary>
     /// Init.
     /// </summary>
@@ -45,6 +56,10 @@ namespace Task3
       this.name = name;
       this.phoneNumber = phoneNumber;
     }
+
+    #endregion
+
+    #region Obj Methods
 
     /// <summary>
     /// Equal's method.
@@ -81,5 +96,7 @@ namespace Task3
     {
       return String.Format("{0} - {1}", this.phoneNumber, this.name);
     }
+
+    #endregion
   }
 }
