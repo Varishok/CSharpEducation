@@ -1,7 +1,12 @@
-﻿namespace Task3
+﻿using System.Collections;
+
+namespace Task3
 {
-  internal class Phonebook
+  internal class Phonebook : IEnumerable
   {
+
+    #region Variables
+
     /// <summary>
     /// Singleton field.
     /// </summary>
@@ -12,6 +17,10 @@
     /// </summary>
     private List<Abonent> abonents = new List<Abonent>();
 
+    #endregion
+
+    #region Properties
+
     /// <summary>
     /// Get list of abonents.
     /// </summary>
@@ -19,6 +28,21 @@
     {
       get { return abonents; }
     }
+
+    /// <summary>
+    /// Indexer declaration.
+    /// </summary>
+    /// <param name="i">Item's index.</param>
+    /// <returns>Item by a given index.</returns>
+    public Abonent this[int i]
+    {
+      get => this.abonents[i];
+      set => this.abonents[i] = value;
+    }
+
+    #endregion
+
+    #region Init
 
     /// <summary>
     /// Init.
@@ -37,6 +61,10 @@
       }
       return instance; 
     }
+
+    #endregion
+
+    #region Interaction with the abonent
 
     /// <summary>
     /// Add abonent in list.
@@ -71,6 +99,10 @@
       return false;
     }
 
+    #endregion
+
+    #region Search
+
     /// <summary>
     /// Find a abonent by phone number.
     /// </summary>
@@ -92,5 +124,30 @@
       var findAbonents = this.abonents.FindAll(abonent => abonent.GetName.Equals(name));
       return findAbonents;
     }
+
+    #endregion
+
+    #region IEnumarable
+
+    /// <summary>
+    /// Implementation of IEnumerable.
+    /// </summary>
+    /// <returns>An IEnumerator object that can be used to iterate through the collection.</returns>
+    public IEnumerator<Abonent> GetEnumerator()
+    {
+      return this.abonents.GetEnumerator();
+    }
+
+    /// <summary>
+    /// Implementation of IEnumerable.
+    /// </summary>
+    /// <returns>An enumerator that iterates through a collection.</returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
+    }
+
+    #endregion
+
   }
 }
