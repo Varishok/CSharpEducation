@@ -88,7 +88,10 @@ namespace Task3
         this.abonents.Add(ab);
         Save(ab);
       }
-      throw new Exception("This abonent has already been added.");
+      else
+      {
+        throw new Exception("This abonent has already been added.");
+      }
     }
 
     /// <summary>
@@ -104,7 +107,10 @@ namespace Task3
         this.abonents.Remove(findAbonent);
         SaveAll();
       }
-      throw new Exception("Can't find a abonent with that phone number.");
+      else
+      {
+        throw new Exception("Can't find a abonent with that phone number.");
+      }
     }
 
     #endregion
