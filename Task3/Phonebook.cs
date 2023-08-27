@@ -167,14 +167,7 @@ namespace Task3
     private void Save(Abonent abonent)
     {
       string text = abonent.ToString() + "\n";
-      try
-      {
-        File.AppendAllText(saveFilePath, text, Encoding.Unicode); // Create or write in file
-      }
-      catch 
-      {
-        throw new Exception("Can't write in file.");
-      }
+      File.AppendAllText(saveFilePath, text, Encoding.Unicode); // Create or write in file
     }
 
     /// <summary>
