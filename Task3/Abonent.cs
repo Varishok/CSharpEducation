@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Task3
 {
+  /// <summary>
+  /// Abonent with his/her data.
+  /// </summary>
   internal class Abonent
   {
 
@@ -25,7 +28,7 @@ namespace Task3
     /// <summary>
     /// Get the abonent's name.
     /// </summary>
-    public string GetName 
+    public string Name 
     { 
       get { return name; } 
     }
@@ -33,7 +36,7 @@ namespace Task3
     /// <summary>
     /// Get the abonent's phone number.
     /// </summary>
-    public string GetPhoneNumber 
+    public string PhoneNumber 
     { 
       get { return phoneNumber; } 
     }

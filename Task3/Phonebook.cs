@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Task3
 {
+  /// <summary>
+  /// Phonebook with abonents.
+  /// </summary>
   internal class Phonebook : IEnumerable
   {
 
@@ -11,7 +14,7 @@ namespace Task3
     /// <summary>
     /// File Path.
     /// </summary>
-    private const string path = "./phonebook.txt";
+    private const string saveFilePath = "./phonebook.txt";
 
     #endregion
 
@@ -117,7 +120,7 @@ namespace Task3
     /// <returns>Abonent if it was found, or null otherwise.</returns>
     public Abonent? FindAbonentByPhone(string phoneNumber)
     {
-      var findAbonent = this.abonents.Find(abonent => abonent.GetPhoneNumber.Equals(phoneNumber));
+      var findAbonent = this.abonents.Find(abonent => abonent.PhoneNumber.Equals(phoneNumber));
       return findAbonent;
     }
 
@@ -128,7 +131,7 @@ namespace Task3
     /// <returns>A list of all abonents with the specified name.</returns>
     public List<Abonent> FindAbonentsByName(string name)
     {
-      var findAbonents = this.abonents.FindAll(abonent => abonent.GetName.Equals(name));
+      var findAbonents = this.abonents.FindAll(abonent => abonent.Name.Equals(name));
       return findAbonents;
     }
 
@@ -168,7 +171,7 @@ namespace Task3
       string text = abonent.ToString() + "\n";
       try
       {
-        File.AppendAllText(path, text, Encoding.Unicode); // Create or write in file
+        File.AppendAllText(saveFilePath, text, Encoding.Unicode); // Create or write in file
       }
       catch 
       {
@@ -181,7 +184,7 @@ namespace Task3
     /// </summary>
     private void SaveAll()
     {
-      File.Delete(path);
+      File.Delete(saveFilePath);
       foreach (var abonent in this.abonents)
       {
         Save(abonent);
@@ -193,9 +196,9 @@ namespace Task3
     /// </summary>
     private void Read()
     {
-      if(File.Exists(path))
+      if(File.Exists(saveFilePath))
       {
-        string[] lines = File.ReadAllLines(path);
+        string[] lines = File.ReadAllLines(saveFilePath);
         lines = lines.SkipLast(1).ToArray(); // The last line is blank.
 
         foreach (string line in lines)
