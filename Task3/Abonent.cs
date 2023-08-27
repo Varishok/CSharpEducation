@@ -10,7 +10,7 @@ namespace Task3
   internal class Abonent
   {
 
-    #region Variables
+    #region Поля и свойства
 
     /// <summary>
     /// The abonent's name.
@@ -21,10 +21,6 @@ namespace Task3
     /// The abonent's phone number.
     /// </summary>
     private string phoneNumber;
-
-    #endregion
-
-    #region Properties
 
     /// <summary>
     /// Get the abonent's name.
@@ -44,7 +40,7 @@ namespace Task3
 
     #endregion
 
-    #region Init
+    #region Конструкторы
 
     /// <summary>
     /// Init.
@@ -59,7 +55,7 @@ namespace Task3
 
     #endregion
 
-    #region Obj Methods
+    #region Базовый класс
 
     /// <summary>
     /// Equal's method.

@@ -6,7 +6,7 @@ namespace Task3
   internal class Phonebook : IEnumerable
   {
 
-    #region Const
+    #region Константы
 
     /// <summary>
     /// File Path.
@@ -15,7 +15,7 @@ namespace Task3
 
     #endregion
 
-    #region Variables
+    #region Поля и свойства
 
     /// <summary>
     /// Singleton field.
@@ -26,10 +26,6 @@ namespace Task3
     /// List of abonents.
     /// </summary>
     private List<Abonent> abonents = new List<Abonent>();
-
-    #endregion
-
-    #region Properties
 
     /// <summary>
     /// Indexer declaration.
@@ -48,7 +44,7 @@ namespace Task3
 
     #endregion
 
-    #region Init
+    #region Конструкторы
 
     /// <summary>
     /// Init.
@@ -73,7 +69,7 @@ namespace Task3
 
     #endregion
 
-    #region Interaction with the abonent
+    #region Методы взаимодействия с контактами
 
     /// <summary>
     /// Add abonent in list.
@@ -112,7 +108,7 @@ namespace Task3
 
     #endregion
 
-    #region Search
+    #region Методы поиска
 
     /// <summary>
     /// Find a abonent by phone number.
@@ -160,7 +156,7 @@ namespace Task3
 
     #endregion
 
-    #region FileSystem
+    #region Методы взаимодействия с файловой системой
 
     /// <summary>
     /// Save abonent to a file.
