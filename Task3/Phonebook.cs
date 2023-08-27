@@ -79,7 +79,7 @@ namespace Task3
     /// </summary>
     /// <param name="name">Abonent's name.</param>
     /// <param name="phoneNumber">Abonent's phone number.</param>
-    public bool AddAbonent(string name, string phoneNumber)
+    public void AddAbonent(string name, string phoneNumber)
     {
       var findAbonent = FindAbonentByPhone(phoneNumber);
       if (findAbonent == null)
@@ -87,9 +87,8 @@ namespace Task3
         var ab = new Abonent(name, phoneNumber);
         this.abonents.Add(ab);
         Save(ab);
-        return true;
       }
-      return false;
+      throw new Exception("This abonent has already been added.");
     }
 
     /// <summary>
@@ -97,16 +96,15 @@ namespace Task3
     /// </summary>
     /// <param name="phoneNumber">Abonent's phone number.</param>
     /// <returns>true - abonent deleted successfully. false - abonent can't deleted.</returns>
-    public bool RemoveAbonent(string phoneNumber)
+    public void RemoveAbonent(string phoneNumber)
     {
       var findAbonent = FindAbonentByPhone(phoneNumber);
       if (findAbonent != null)
       {
         this.abonents.Remove(findAbonent);
         SaveAll();
-        return true;
       }
-      return false;
+      throw new Exception("Can't find a abonent with that phone number.");
     }
 
     #endregion
