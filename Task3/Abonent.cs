@@ -67,14 +67,14 @@ namespace Task3
     /// <returns>true if the specified object phone number is equal to the current object; otherwise, false.</returns>
     public override bool Equals(object? obj)
     {
-      if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-      {
-        return false;
-      }
-      else
+      if (obj is Abonent)
       {
         Abonent other = (Abonent)obj;
         return this.phoneNumber.Equals(other.phoneNumber);
+      }
+      else 
+      {  
+        return false; 
       }
     }
 
