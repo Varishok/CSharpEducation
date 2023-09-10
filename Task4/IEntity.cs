@@ -4,11 +4,7 @@
   /// Сущность.
   /// </summary>
   /// <typeparam name="T">Тип сущности.</typeparam>
-  internal class IEntity<T>
+  internal interface IEntity<T>
   {
-    /// <summary>
-    /// Уникальный идентификатор сущности.
-    /// </summary>
-    public T Id { get; set; }
   }
 }
