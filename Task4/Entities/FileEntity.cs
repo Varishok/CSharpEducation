@@ -1,9 +1,9 @@
-﻿namespace Task4
+﻿namespace Task4.Entities
 {
   /// <summary>
   /// Файловая сущность.
   /// </summary>
-  internal class FileEntity : IEntity
+  public class FileEntity : IEntity
   {
     public Guid Id { get; }
 

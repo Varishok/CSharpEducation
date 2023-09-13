@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Task4.Entities;
 
-namespace Task4
+namespace Task4.Repositories
 {
   /// <summary>
   /// Операции с сущностями.
@@ -17,7 +13,7 @@ namespace Task4
     /// Создание сущности
     /// </summary>
     /// <param name="entity">Сущность.</param>
-    public void CreateEntity(T entity) { }
+    public void CreateEntity(T entity);
 
     /// <summary>
     /// Получение всех сущностей.
@@ -36,12 +32,12 @@ namespace Task4
     /// Обновление сущности.
     /// </summary>
     /// <param name="entity">Сущность</param>
-    public void UpdateEntity(T entity) { }
+    public void UpdateEntity(T entity);
 
     /// <summary>
     /// Удаление сущности.
     /// </summary>
     /// <param name="id">Идентификатор сущности.</param>
-    public void DeleteEntity(int id) { }
+    public void DeleteEntity(int id);
   }
 }

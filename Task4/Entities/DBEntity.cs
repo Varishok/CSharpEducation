@@ -1,9 +1,9 @@
-﻿namespace Task4
+﻿namespace Task4.Entities
 {
   /// <summary>
   /// Сущность для работы с базой данных.
   /// </summary>
-  internal class DBEntity : IEntity
+  public class DBEntity : IEntity
   {
     public Guid Id { get; }
 

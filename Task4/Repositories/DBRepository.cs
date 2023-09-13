@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Task4.Entities;
 
-namespace Task4
+namespace Task4.Repositories
 {
   /// <summary>
   /// Работа с базой данных.
@@ -8,19 +9,16 @@ namespace Task4
   /// <typeparam name="T">Тип сущности.</typeparam>
   internal class DBRepository<T> : IRepository<T> where T : DBEntity
   {
+    #region Поля и свойства
+
     /// <summary>
     /// Соединение с базой данных.
     /// </summary>
     DbSet<T> dbSet;
 
-    /// <summary>
-    /// Конструктор.
-    /// </summary>
-    /// <param name="db">Соединение с базой данных.</param>
-    public DBRepository(DbSet<T> db) 
-    {
-      this.dbSet = db;
-    }
+    #endregion
+
+    #region IRepository
 
     public void CreateEntity(T entity)
     {
@@ -47,5 +45,20 @@ namespace Task4
       T entity = GetEntity(id);
       dbSet.Remove(entity);
     }
+
+    #endregion
+
+    #region Конструкторы
+
+    /// <summary>
+    /// Конструктор.
+    /// </summary>
+    /// <param name="db">Соединение с базой данных.</param>
+    public DBRepository(DbSet<T> db)
+    {
+      this.dbSet = db;
+    }
+
+    #endregion
   }
 }

@@ -1,4 +1,6 @@
-﻿namespace Task4
+﻿using Task4.Entities;
+
+namespace Task4.Repositories
 {
   /// <summary>
   /// Репозиторий файлов.
@@ -6,10 +8,16 @@
   /// <typeparam name="T">Файловые сущности.</typeparam>
   internal class FileRepository<T> : IRepository<T> where T : FileEntity
   {
+    #region Поля и свойства
+
     /// <summary>
     /// Список файлов репозитория.
     /// </summary>
     public List<T> Files { get; set; }
+
+    #endregion
+
+    #region IRepository
 
     public void CreateEntity(T entity)
     {
@@ -31,7 +39,7 @@
 
     public void UpdateEntity(T entity)
     {
-      T updatingEntity = Files.Where(x => x.Id == entity.Id).FirstOrDefault();
+      T updatingEntity = Files.Where(x => x.Id == entity.Id);
       File.Move(updatingEntity.FileInfo.FullName, entity.FileInfo.FullName);
       updatingEntity = entity;
     }
@@ -43,6 +51,10 @@
       File.Delete(entity.FileInfo.FullName);
       this.Files.Remove(entity);
     }
+
+    #endregion
+
+    #region Конструкторы
 
     /// <summary>
     /// Конструктор.
@@ -58,6 +70,8 @@
         T entity = (T)new FileEntity(file);
         this.Files.Add(entity);
       }
+
+      #endregion
     }
   }
 }

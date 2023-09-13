@@ -1,9 +1,9 @@
-﻿namespace Task4
+﻿namespace Task4.Entities
 {
   /// <summary>
   /// Сущность.
   /// </summary>
-  internal interface IEntity
+  public interface IEntity
   {
     /// <summary>
     /// Уникальный идентификатор.
