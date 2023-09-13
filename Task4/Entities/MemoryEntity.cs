@@ -8,11 +8,23 @@
     public Guid Id { get; }
 
     /// <summary>
-    /// Конструктор.
+    /// Значение сущности.
     /// </summary>
-    public MemoryEntity() 
-    { 
+    public int Value { get; set; }
+
+    /// <summary>
+    /// Конструктор без параметров.
+    /// </summary>
+    public MemoryEntity() : this(0) { }
+
+    /// <summary>
+    /// Конструктор с одним параметром.
+    /// </summary>
+    /// <param name="value">Значение сущности.</param>
+    public MemoryEntity(int value)
+    {
       this.Id = Guid.NewGuid();
+      this.Value = value;
     }
   }
 }
