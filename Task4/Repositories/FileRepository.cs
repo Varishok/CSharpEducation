@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Task4
+﻿namespace Task4
 {
   /// <summary>
   /// Репозиторий файлов.
@@ -34,13 +32,16 @@ namespace Task4
     public void UpdateEntity(T entity)
     {
       T updatingEntity = Files.Where(x => x.Id == entity.Id).FirstOrDefault();
+      File.Move(updatingEntity.FileInfo.FullName, entity.FileInfo.FullName);
       updatingEntity = entity;
     }
 
     public void DeleteEntity(int id)
     {
       T entity = this.Files[id];
-      Files.Remove(entity);
+
+      File.Delete(entity.FileInfo.FullName);
+      this.Files.Remove(entity);
     }
 
     /// <summary>
@@ -50,12 +51,12 @@ namespace Task4
     public FileRepository(string path) 
     {
       var directory = new DirectoryInfo(path);
-      Files = new List<T>();
+      this.Files = new List<T>();
 
       foreach(FileInfo file in directory.GetFiles())
       {
         T entity = (T)new FileEntity(file);
-        Files.Add(entity);
+        this.Files.Add(entity);
       }
     }
   }
