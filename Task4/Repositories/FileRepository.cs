@@ -39,9 +39,7 @@ namespace Task4.Repositories
 
     public void UpdateEntity(T entity)
     {
-      T updatingEntity = Files.Where(x => x.Id == entity.Id).FirstOrDefault();
-      File.Move(updatingEntity.FileInfo.FullName, entity.FileInfo.FullName);
-      updatingEntity = entity;
+      using (FileStream fs = File.Create(entity.FileInfo.FullName)) { }
     }
 
     public void DeleteEntity(int id)
