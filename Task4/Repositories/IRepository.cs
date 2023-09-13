@@ -17,7 +17,7 @@ namespace Task4
     /// Создание сущности
     /// </summary>
     /// <param name="entity">Сущность.</param>
-    public void CreateRepository(T entity) { }
+    public void CreateEntity(T entity) { }
 
     /// <summary>
     /// Получение всех сущностей.
@@ -30,18 +30,18 @@ namespace Task4
     /// </summary>
     /// <param name="id">Идентификатор сущности.</param>
     /// <returns>Полученная сущности или ошибка, если таковой нет.</returns>
-    public T GetRepository(int id);
+    public T GetEntity(int id);
 
     /// <summary>
     /// Обновление сущности.
     /// </summary>
     /// <param name="entity">Сущность</param>
-    public void UpdateRepository(T entity) { }
+    public void UpdateEntity(T entity) { }
 
     /// <summary>
     /// Удаление сущности.
     /// </summary>
     /// <param name="id">Идентификатор сущности.</param>
-    public void DeleteRepository(int id) { }
+    public void DeleteEntity(int id) { }
   }
 }

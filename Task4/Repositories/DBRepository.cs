@@ -11,7 +11,7 @@ namespace Task4
     /// <summary>
     /// Соединение с базой данных.
     /// </summary>
-    DbSet<T> db;
+    DbSet<T> dbSet;
 
     /// <summary>
     /// Конструктор.
@@ -19,33 +19,33 @@ namespace Task4
     /// <param name="db">Соединение с базой данных.</param>
     public DBRepository(DbSet<T> db) 
     {
-      this.db = db;
+      this.dbSet = db;
     }
 
-    public void CreateRepository(T entity)
+    public void CreateEntity(T entity)
     {
-      db.Add(entity);
+      dbSet.Add(entity);
     }
 
     public IEnumerable<T> GetAll()
     {
-      return db;
+      return dbSet;
     }
 
-    public T GetRepository(int id)
+    public T GetEntity(int id)
     {
-      return db.Find(id);
+      return dbSet.Find(id);
     }
 
-    public void UpdateRepository(T entity)
+    public void UpdateEntity(T entity)
     {
-      db.Entry(entity).State = EntityState.Modified;
+      dbSet.Entry(entity).State = EntityState.Modified;
     }
 
-    public void DeleteRepository(int id)
+    public void DeleteEntity(int id)
     {
-      T entity = GetRepository(id);
-      db.Remove(entity);
+      T entity = GetEntity(id);
+      dbSet.Remove(entity);
     }
   }
 }
