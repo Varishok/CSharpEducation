@@ -18,11 +18,11 @@ namespace Task5
     /// <param name="uri">Ссылка на файл для скачивания.</param>
     /// <param name="saveFilePath">Путь сохранения файла.</param>
     /// <returns></returns>
-    public static async Task DownloadFileTaskAsync(this HttpClient client, Uri uri, string saveFilePath)
+    public static async Task DownloadFileTaskAsync(this HttpClient client, string uri, string saveFilePath)
     {
       using (var stream = await client.GetStreamAsync(uri))
       {
-        using (var saveFile = new FileStream(saveFilePath, FileMode.CreateNew))
+        using (var saveFile = new FileStream(saveFilePath, FileMode.Create))
         {
           await stream.CopyToAsync(saveFile);
         }
