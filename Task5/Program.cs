@@ -10,18 +10,32 @@ namespace Task5
     /// <summary>
     /// Асинхронная загрузка файлов.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Скачанные файлы, если таковые есть.</returns>
     static async Task Main()
     {
-      Console.Write("Введите uri:");
-      string uri = Console.ReadLine();
-
-      Console.Write("Введите путь к файлу сохранения:");
-      string saveFilePath = Console.ReadLine();
+      string uriToFile;
+      string saveFilePath;
+      char downloadMore = 'y';
 
       using (var client = new HttpClient())
       {
-        await client.DownloadFileTaskAsync(uri, saveFilePath);
+        while (downloadMore.Equals('y'))
+        {
+          Console.Write("Введите uri:");
+          uriToFile = Console.ReadLine();
+
+          Console.Write("Введите путь к файлу сохранения:");
+          saveFilePath = Console.ReadLine();
+
+          await client.DownloadFileTaskAsync(uriToFile, saveFilePath);
+
+          Console.Write("Скачать еще один файл? (y - да, другой символ - выход):");
+          downloadMore = Console.ReadKey().KeyChar;
+
+          Console.WriteLine("\n");
+        }
+
+        Task.WaitAll();
       }
     }
   }
