@@ -16,7 +16,7 @@ public static class PhoneNumberValidator
   {
     var regex = new Regex(@"^\+\d{1,3}\s?\(\d{3}\)\s?\d{3}-\d{4}$");
     var isValid  = regex.IsMatch(number.Number);
-    if (isValid)
+    if (!isValid)
       throw new ArgumentException("Phone number is invalid");
   }
 

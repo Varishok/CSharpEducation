@@ -18,7 +18,7 @@ namespace TestPhonebook
     public void Phonebook_AddSubscriber_SuccessfullyAdded()
     {
       List<PhoneNumber> phoneNumbers = new List<PhoneNumber>() 
-        { new PhoneNumber("+7(999)999-99", PhoneNumberType.Personal) };
+        { new PhoneNumber("+7(999)999-9999", PhoneNumberType.Personal) };
 
       Subscriber expectedSub = new Subscriber("Egor", phoneNumbers);
       phonebook.AddSubscriber(expectedSub);
@@ -31,8 +31,8 @@ namespace TestPhonebook
     public void Phonebook_AddNumberToSubscriber_SuccessfullyAdded()
     {
       List<PhoneNumber> phoneNumbers = new List<PhoneNumber>()
-        { new PhoneNumber("+7(999)999-99", PhoneNumberType.Personal) };
-      PhoneNumber phoneNumber = new PhoneNumber("1234567890", PhoneNumberType.Personal);
+        { new PhoneNumber("+7(999)999-9999", PhoneNumberType.Personal) };
+      PhoneNumber phoneNumber = new PhoneNumber("+7(888)888-8888", PhoneNumberType.Personal);
 
       Subscriber expectedSub = new Subscriber("Egor", phoneNumbers);
       phonebook.AddSubscriber(expectedSub);

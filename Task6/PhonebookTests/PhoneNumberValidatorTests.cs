@@ -21,7 +21,6 @@ namespace TestPhonebook
     public void PhoneNumberValidator_Validate_SuccessfullyValidate()
     {
       Assert.DoesNotThrow(() => PhoneNumberValidator.Validate(validPhoneNumber));
-      Assert.DoesNotThrow(() => PhoneNumberValidator.Validate(invalidPhoneNumber));
     }
 
     [Test]
