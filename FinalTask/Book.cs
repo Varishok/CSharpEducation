@@ -5,6 +5,21 @@
   /// </summary>
   internal class Book
   {
+    #region Вложенные типы
+
+    /// <summary>
+    /// Статусы книги.
+    /// </summary>
+    public enum Status
+    {
+      Available,
+      Added,
+      Read,
+      Done,
+    }
+
+    #endregion
+
     #region Поля и свойства
 
     /// <summary>
@@ -31,6 +46,11 @@
     /// Путь к файлу.
     /// </summary>
     public string FilePath { get; set; }
+
+    /// <summary>
+    /// Статус.
+    /// </summary>
+    public Status Mark { get; set; }
 
     #endregion
 
@@ -71,6 +91,7 @@
       this.Author = author;
       this.Description = description;
       this.FilePath = filePath;
+      this.Mark = Status.Available;
     }
 
     #endregion
