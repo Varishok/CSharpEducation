@@ -33,7 +33,7 @@
     /// <summary>
     /// Ид.
     /// </summary>
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Имя.
@@ -53,17 +53,18 @@
     /// Конструктор.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    public User(int id) : this(id, String.Empty) { }
+    public User(long id) : this(id, String.Empty) { }
 
     /// <summary>
     /// Конструктор.
     /// </summary>
     /// <param name="id">Ид пользователя.</param>
     /// <param name="name">Имя пользователя.</param>
-    public User(int id, string name)
+    public User(long id, string name)
     {
       this.Id = id;
       this.Name = name;
+      this.Mark = Status.OnStart;
     }
 
     #endregion
