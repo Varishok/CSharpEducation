@@ -1,13 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using Telegram.Bot.Types.ReplyMarkups;
+using System;
 
 namespace FinalTask
 {
@@ -28,56 +24,17 @@ namespace FinalTask
 
         if (currentUser == null) // Новый пользователь
         {
-
-          if (message.Text.ToLower() == "/start")
-          {
-            inlineKeyboard = new(new[]
-            {
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(text: "Да", callbackData: "/newUserCreate"),
-                    InlineKeyboardButton.WithCallbackData(text: "Нет", callbackData: "/userUpdateName"),
-                },
-            });
-            users.Add(new User(message.Chat.Id));
-            await botClient.SendTextMessageAsync(
-              message.Chat,
-              $"Добро пожаловать в библиотеку! Вас зовут {message.Chat.Username}?",
-              replyMarkup: inlineKeyboard,
-              cancellationToken: cancellationToken);
-            return;
-          }
+          TelegramBotInteraction.NewUserCreateStart(botClient, message, cancellationToken, users);
+          return;
         }
 
         if(currentUser.Mark == User.Status.OnCreatedName) // Изменение имени пользователя - конец
         {
-          currentUser.Name = message.Text;
-          await botClient.SendTextMessageAsync(
-            message.Chat,
-            $"Пользователь - {currentUser.Name}, добавлен в библиотеку.",
-            cancellationToken: cancellationToken);
-          currentUser.Mark = User.Status.OnStart;
+          TelegramBotInteraction.UpdateUserNameEnd(botClient, message, cancellationToken, currentUser);
           return;
         }
 
-        // Меню пользователя.
-        inlineKeyboard = new(new[]
-        {
-          new[]
-          {
-            InlineKeyboardButton.WithCallbackData(text: "Общая библиотека", callbackData: "/library"),
-            InlineKeyboardButton.WithCallbackData(text: "Моя библиотека", callbackData: "/myLibrary"),
-          },
-          new[]
-          {
-            InlineKeyboardButton.WithCallbackData(text: "Добавить книгу", callbackData: "/addBook"),
-          },
-          new[]
-          {
-            InlineKeyboardButton.WithCallbackData(text: "Изменить имя", callbackData: "/userUpdateName"),
-          },
-        });
-        await botClient.SendTextMessageAsync(message.Chat, "Привет-привет!! Чего ты хочешь?"); 
+        TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
       }
 
       if (update.Type == Telegram.Bot.Types.Enums.UpdateType.CallbackQuery)
@@ -90,12 +47,7 @@ namespace FinalTask
         {
           if (currentUser != null)
           {
-            currentUser.Name = message.Chat.Username;
-            currentUser.Mark = User.Status.OnStart;
-            await botClient.SendTextMessageAsync(
-              message.Chat,
-              $"Пользователь - {currentUser.Name}, добавлен в библиотеку.",
-              cancellationToken: cancellationToken);
+            TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
             return;
           }
         }
@@ -104,11 +56,7 @@ namespace FinalTask
         {
           if (currentUser != null)
           {
-            currentUser.Mark = User.Status.OnCreatedName;
-            await botClient.SendTextMessageAsync(
-              message.Chat,
-              $"Введите ваше имя.",
-              cancellationToken: cancellationToken);
+            TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
             return;
           }
         }
