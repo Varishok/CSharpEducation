@@ -91,7 +91,7 @@ namespace FinalTask
     }
 
     /// <summary>
-    /// Начало изменения имени пользователя.
+    /// Изменения имени пользователя - начало.
     /// </summary>
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
@@ -107,7 +107,7 @@ namespace FinalTask
     }
 
     /// <summary>
-    /// Конец изменения имени пользователя.
+    /// Изменения имени пользователя - конец.
     /// </summary>
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
@@ -121,6 +121,54 @@ namespace FinalTask
         $"Пользователь - {currentUser.Name}, добавлен в библиотеку.",
         cancellationToken: cancellationToken);
       currentUser.Mark = User.Status.OnStart;
+    }
+
+    public static async void Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, List<Book> books)
+    {
+      string lines = string.Empty;
+      for(int i = 1; i <= books.Count; i++)
+      {
+        var book = books[i];
+        lines += $"{i}. {book.Title} \n";
+      }
+
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        lines,
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Создание новой книги - начало.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async void CreateNewBookStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      currentUser.Mark = User.Status.OnCreateBookTitle;
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Введите название книги.",
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Создание новой книги - конец.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="books">Библиотека книжек.</param>
+    public static async void CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, List<Book> books)
+    {
+      books.Add(new Book(message.Text));
+      currentUser.Mark = User.Status.OnStart;
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Книга с названием '{message.Text}' создана.",
+        cancellationToken: cancellationToken);
     }
   }
 }
