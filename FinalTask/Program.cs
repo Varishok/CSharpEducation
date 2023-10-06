@@ -34,6 +34,12 @@ namespace FinalTask
           return;
         }
 
+        if (currentUser.Mark == User.Status.OnCreateBookTitle) // Создание книги - конец
+        {
+          TelegramBotInteraction.CreateNewBookEnd(botClient, message, cancellationToken, currentUser, books);
+          return;
+        }
+
         TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
       }
 
@@ -57,6 +63,24 @@ namespace FinalTask
           if (currentUser != null)
           {
             TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
+            return;
+          }
+        }
+
+        if (codeOfButton == "/library") // Вывод общей библиотеки
+        {
+          if (currentUser != null)
+          {
+            TelegramBotInteraction.Library(botClient, message, cancellationToken, books);
+            return;
+          }
+        }
+
+        if (codeOfButton == "/addBook") // Создание книги - начало
+        {
+          if (currentUser != null)
+          {
+            TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
             return;
           }
         }
