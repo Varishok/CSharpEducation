@@ -146,6 +146,26 @@ namespace FinalTask
         cancellationToken: cancellationToken);
     }
 
+    public static async void LibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, string bookId)
+    {
+      var book = DBInteraction.GetBook(bookId);
+      InlineKeyboardMarkup inlineKeyboard = new(new[]
+      {
+        new[]
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "/library"),
+          InlineKeyboardButton.WithCallbackData(text: "Добавить в мою библиотеку", callbackData: $"/myLibraryAdd {bookId}"),
+        },
+      });
+      var lines = $"Название: '{book.Title}'\nАвтор: {book.Author}\nОписание: {book.Description}";
+
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        lines,
+        replyMarkup: inlineKeyboard,
+        cancellationToken: cancellationToken);
+    }
+
     /// <summary>
     /// Создание новой книги - начало.
     /// </summary>
@@ -171,7 +191,7 @@ namespace FinalTask
     /// <param name="books">Библиотека книжек.</param>
     public static async void CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
-      DBInteraction.CreateBook(currentUser.Id, new Book(message.Text));
+      DBInteraction.CreateBook(currentUser.Id, new Book(title: message.Text));
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
       await botClient.SendTextMessageAsync(
         message.Chat,
