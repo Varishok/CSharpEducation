@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using Telegram.Bot.Types;
 
 namespace FinalTask
 {
@@ -32,7 +31,7 @@ namespace FinalTask
             var id = (long)reader.GetValue(0);
             var name = reader.GetValue(1) != DBNull.Value ? (string)reader.GetValue(1) : String.Empty;
             var mark = reader.GetValue(2) != DBNull.Value ? (User.Status)Enum.GetValues(typeof(User.Status)).GetValue((long)reader.GetValue(2)) : User.Status.OnStart;
-            return new User(id, name, mark);
+            return new User(id: id, name: name, mark: mark);
           }
         }
         connection.Close();
@@ -101,6 +100,11 @@ namespace FinalTask
       }
     }
 
+    /// <summary>
+    /// Получение книг, не привязанных к текущему пользователю.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <returns>Список книг.</returns>
     public static List<Book> GetAllBookNames(long userId)
     {
       var books = new List<Book>();
@@ -118,7 +122,7 @@ namespace FinalTask
         {
           while (reader.Read())
           {
-            var book = new Book((string)reader.GetValue(1));
+            var book = new Book(title: (string)reader.GetValue(1));
             book.Id = new Guid((string)reader.GetValue(0));
             books.Add(book);
           }
@@ -149,6 +153,39 @@ namespace FinalTask
         var reader = command.ExecuteNonQuery();
         connection.Close();
       }
+    }
+
+    /// <summary>
+    /// Получение книги по Id.
+    /// </summary>
+    /// <param name="bookId">Id книги.</param>
+    /// <returns>Найденная книга, в противном случае null.</returns>
+    public static Book GetBook(string bookId)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"SELECT Id, Название, Автор, Описание FROM 'Книги' WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
+
+        using (var reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            var id = (string)reader.GetValue(0);
+            var title = (string)reader.GetValue(1);
+            var author = reader.GetValue(2) != DBNull.Value ? (string)reader.GetValue(2) : String.Empty;
+            var description = reader.GetValue(3) != DBNull.Value ? (string)reader.GetValue(3) : String.Empty;
+            var book = new Book(title: title, author: author, description: description);
+            book.Id = new Guid(id);
+            return book;
+          }
+        }
+        connection.Close();
+      }
+      return null;
     }
   }
 }
