@@ -19,7 +19,6 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="update">Обновления.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns></returns>
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
       // Некоторые действия
@@ -85,20 +84,34 @@ namespace FinalTask
           return;
         }
 
-        if (codeOfButton == "/addBook") // Создание книги - начало
-        {
-          await TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
-          return;
-        }
-
-        if(codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
+        if (codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
         {
           var bookId = callbackData[1];
           await TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
           return;
         }
 
-        if(codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
+        if (codeOfButton == "/addBook") // Создание книги - начало
+        {
+          await TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
+        if (codeOfButton == "/myLibrary") // Вывод библиотеки пользователя с фильтром или без
+        {
+          var filter = Convert.ToInt32(callbackData[1]);
+          await TelegramBotInteraction.MyLibrary(botClient, message, cancellationToken, currentUser, filter);
+          return;
+        }
+
+        if (codeOfButton == "/myLibraryBook") // Вывод книги из общей библиотеки
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
+          return;
+        }
+
+        if (codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
         {
           var bookId = callbackData[1];
           await TelegramBotInteraction.LibraryAddBookToUser(botClient, message, cancellationToken, currentUser, bookId);
@@ -113,7 +126,6 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="exception">Исключение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns></returns>
     public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
       // Вывод ошибки в консоль

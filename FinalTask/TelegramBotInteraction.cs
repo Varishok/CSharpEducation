@@ -1,6 +1,7 @@
 ﻿using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using System.Reflection.PortableExecutable;
 
 namespace FinalTask
 {
@@ -22,7 +23,7 @@ namespace FinalTask
         new[]
         {
           InlineKeyboardButton.WithCallbackData(text: "Общая библиотека", callbackData: "/library"),
-          InlineKeyboardButton.WithCallbackData(text: "Моя библиотека", callbackData: "/myLibrary"),
+          InlineKeyboardButton.WithCallbackData(text: "Моя библиотека", callbackData: "/myLibrary 0"),
         },
         new[]
         {
@@ -140,20 +141,20 @@ namespace FinalTask
     /// <param name="currentUser">Текущий пользователь.</param>
     public static async Task Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
-      var books = DBInteraction.GetAllBookNames(currentUser.Id);
+      var books = DBInteraction.GetAllBooks(currentUser.Id);
       var list = new List<List<InlineKeyboardButton>>();
       var lines = string.Empty;
 
       list.Add(new List<InlineKeyboardButton>(new[]
           {
-            InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu")
+            InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
           }));
       for (int i = 0; i < books.Count; i++)
       {
         lines += $"{i+1}. {books[i].Title} \n";
         list.Add(new List<InlineKeyboardButton>(new[]
           {
-            InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/libraryBook {books[i].Id}")
+            InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/libraryBook {books[i].Id}"),
           }));
       }
 
@@ -206,6 +207,86 @@ namespace FinalTask
       await botClient.SendTextMessageAsync(
         message.Chat,
         "Книжка добавлена в вашу библиотеку.",
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Просмотр библиотеки пользователя.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task MyLibrary(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, int mark = 0)
+    {
+      var books = DBInteraction.GetUserBooks(currentUser.Id);
+      var list = new List<List<InlineKeyboardButton>>();
+      var lines = string.Empty;
+      if(mark > 0)
+      {
+        var filter = (Book.Status)Enum.GetValues(typeof(Book.Status)).GetValue(mark);
+        books = new List<Book>(books.Where(x => x.Mark == filter));
+      }
+
+      list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
+            InlineKeyboardButton.WithCallbackData(text: "Без фильтра", callbackData: $"/myLibrary 0"),
+          }));
+      list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: "Добавлены", callbackData: $"/myLibrary 1"),
+            InlineKeyboardButton.WithCallbackData(text: "На чтении", callbackData: $"/myLibrary 2"),
+            InlineKeyboardButton.WithCallbackData(text: "Прочитаны", callbackData: $"/myLibrary 3"),
+          }));
+      for (int i = 0; i < books.Count; i++)
+      {
+        lines += $"{i + 1}. {books[i].Title} \n";
+        list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/myLibraryBook {books[i].Id}")
+          }));
+      }
+
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        lines,
+        replyMarkup: new InlineKeyboardMarkup(list),
+        cancellationToken: cancellationToken);
+    }
+
+    public static async Task MyLibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      var book = DBInteraction.GetBook(bookId);
+      InlineKeyboardMarkup inlineKeyboard = new(new[]
+      {
+        new[]
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "/library"),
+          InlineKeyboardButton.WithCallbackData(text: "Предоставить файл", callbackData: $"/checkFile {bookId}"),
+        },
+        new[]
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Изменить название", callbackData: $"/bookChangeTitle {bookId}"),
+          InlineKeyboardButton.WithCallbackData(text: "Изменить автора", callbackData: $"/bookChangeAuthor {bookId}"),
+        },
+        new[]
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Изменить описание", callbackData: $"/bookChangeDescription {bookId}"),
+          InlineKeyboardButton.WithCallbackData(text: "Изменить файл", callbackData: $"/bookChangeFile {bookId}"),
+        },
+        new[]
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Читаю", callbackData: $"/bookChangeDescription {bookId}"),
+          InlineKeyboardButton.WithCallbackData(text: "Прочитал", callbackData: $"/bookChangeFile {bookId}"),
+        },
+      });
+      var lines = $"Название: '{book.Title}'\nАвтор: {book.Author}\nОписание: {book.Description}";
+
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        lines,
+        replyMarkup: inlineKeyboard,
         cancellationToken: cancellationToken);
     }
 
