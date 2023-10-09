@@ -25,7 +25,7 @@
     /// <summary>
     /// Ид.
     /// </summary>
-    private Guid Id { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Название.
