@@ -125,8 +125,9 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="books">Список книг.</param>
-    public static async void Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, List<Book> books)
+    public static async void Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
+      var books = DBInteraction.GetAllBookNames(currentUser.Id);
       var list = new List<List<InlineKeyboardButton>>();
       var lines = string.Empty;
       for (int i = 0; i < books.Count; i++)

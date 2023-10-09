@@ -63,8 +63,7 @@ namespace FinalTask
 
         if (codeOfButton == "/library") // Вывод общей библиотеки
         {
-          var books = DBInteraction.GetAllBookNames(currentUser.Id);
-          TelegramBotInteraction.Library(botClient, message, cancellationToken, books);
+          TelegramBotInteraction.Library(botClient, message, cancellationToken, currentUser);
           return;
         }
 
@@ -76,7 +75,8 @@ namespace FinalTask
 
         if(codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
         {
-          
+          var bookId = callbackData[1];
+
           return;
         }
       }
