@@ -15,7 +15,7 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    public static async void MainMenu(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public static async Task MainMenu(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
       InlineKeyboardMarkup inlineKeyboard = new(new[]
       {
@@ -47,7 +47,7 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    public static async void DeleteMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public static async Task DeleteMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
       await botClient.DeleteMessageAsync(
         chatId: message.Chat.Id, 
@@ -61,7 +61,7 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    public static async void NewUserCreateStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    public static async Task NewUserCreateStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
       InlineKeyboardMarkup inlineKeyboard = new(new[]
         {
@@ -87,7 +87,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="newUser">Новый пользователь.</param>
-    public static async void NewUserCreateEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User newUser)
+    public static async Task NewUserCreateEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User newUser)
     {
       DBInteraction.UpdateUserName(newUser.Id, message.Chat.Username);
       DBInteraction.UpdateUserMark(newUser.Id, User.Status.OnStart);
@@ -104,7 +104,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async void UpdateUserNameStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    public static async Task UpdateUserNameStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnCreatedName);
       await botClient.SendTextMessageAsync(
@@ -120,7 +120,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async void UpdateUserNameEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    public static async Task UpdateUserNameEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       DBInteraction.UpdateUserName(currentUser.Id, message.Text);
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
@@ -138,7 +138,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async void Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    public static async Task Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       var books = DBInteraction.GetAllBookNames(currentUser.Id);
       var list = new List<List<InlineKeyboardButton>>();
@@ -171,7 +171,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="bookId">Ид книги.</param>
-    public static async void LibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, string bookId)
+    public static async Task LibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, string bookId)
     {
       var book = DBInteraction.GetBook(bookId);
       InlineKeyboardMarkup inlineKeyboard = new(new[]
@@ -199,7 +199,7 @@ namespace FinalTask
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
     /// <param name="bookId">Ид книги.</param>
-    public static async void LibraryAddBookToUser(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    public static async Task LibraryAddBookToUser(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
     {
       DBInteraction.AddBookToUser(currentUser.Id, bookId);
 
@@ -216,7 +216,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async void CreateNewBookStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    public static async Task CreateNewBookStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnCreateBookTitle);
       await botClient.SendTextMessageAsync(
@@ -232,7 +232,7 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async void CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    public static async Task CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       var book = new Book(title: message.Text);
       DBInteraction.CreateBook(book);

@@ -8,36 +8,46 @@ namespace FinalTask
 {
   internal class Program
   {
+    /// <summary>
+    /// Телеграмм бот.
+    /// </summary>
     static ITelegramBotClient bot;
+
+    /// <summary>
+    /// Обработчик обновлений телеграмм бота.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="update">Обновления.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns></returns>
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
       // Некоторые действия
       Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
       if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
       {
-        InlineKeyboardMarkup inlineKeyboard;
         var message = update.Message;
         var currentUser = DBInteraction.FindUser(message.Chat.Id);
 
         if (currentUser == null) // Новый пользователь
         {
-          TelegramBotInteraction.NewUserCreateStart(botClient, message, cancellationToken);
+          await TelegramBotInteraction.NewUserCreateStart(botClient, message, cancellationToken);
           return;
         }
 
         if(currentUser.Mark == User.Status.OnCreatedName) // Изменение имени пользователя - конец
         {
-          TelegramBotInteraction.UpdateUserNameEnd(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.UpdateUserNameEnd(botClient, message, cancellationToken, currentUser);
           return;
         }
 
         if (currentUser.Mark == User.Status.OnCreateBookTitle) // Создание книги - конец
         {
-          TelegramBotInteraction.CreateNewBookEnd(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.CreateNewBookEnd(botClient, message, cancellationToken, currentUser);
           return;
         }
 
-        TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
+        await TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
       }
 
       if (update.Type == Telegram.Bot.Types.Enums.UpdateType.CallbackQuery)
@@ -49,54 +59,61 @@ namespace FinalTask
         
         if(currentUser == null) { return; }
 
-        TelegramBotInteraction.DeleteMessage(botClient, message, cancellationToken);
+        await TelegramBotInteraction.DeleteMessage(botClient, message, cancellationToken);
 
         if(codeOfButton == "/mainMenu") // Возврат в главное меню
         {
-          TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
+          await TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
           return;
         }
 
         if (codeOfButton == "/newUserCreate") // Создание пользователя с существующим именем.
         {
-          TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
           return;
         }
 
         if(codeOfButton == "/userUpdateName") // Изменение имени пользователя - начало
         {
-          TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
           return;
         }
 
         if (codeOfButton == "/library") // Вывод общей библиотеки
         {
-          TelegramBotInteraction.Library(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.Library(botClient, message, cancellationToken, currentUser);
           return;
         }
 
         if (codeOfButton == "/addBook") // Создание книги - начало
         {
-          TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
+          await TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
           return;
         }
 
         if(codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
         {
           var bookId = callbackData[1];
-          TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
+          await TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
           return;
         }
 
         if(codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
         {
           var bookId = callbackData[1];
-          TelegramBotInteraction.LibraryAddBookToUser(botClient, message, cancellationToken, currentUser, bookId);
+          await TelegramBotInteraction.LibraryAddBookToUser(botClient, message, cancellationToken, currentUser, bookId);
           return;
         }
       }
     }
 
+    /// <summary>
+    /// Обработчик исключений телеграмм бота.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="exception">Исключение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns></returns>
     public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
       // Вывод ошибки в консоль
