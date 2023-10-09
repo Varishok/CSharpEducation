@@ -100,6 +100,22 @@ namespace FinalTask
       }
     }
 
+    public static void AddBookToUser(long userId, string bookId)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"INSERT INTO 'КнигиПользователи' ('Id_книги', 'Id_пользователя') VALUES ($idBook, $idUser)";
+        command.Parameters.AddWithValue("$idBook", bookId);
+        command.Parameters.AddWithValue("$idUser", userId);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
     /// <summary>
     /// Получение книг, не привязанных к текущему пользователю.
     /// </summary>
@@ -135,20 +151,17 @@ namespace FinalTask
     /// <summary>
     /// Сохранение данных о книге в бд.
     /// </summary>
-    /// <param name="userId">Ид пользователя.</param>
     /// <param name="book">Книга.</param>
-    public static void CreateBook(long userId, Book book)
+    public static void CreateBook(Book book)
     {
       using (var connection = new SqliteConnection(Config))
       {
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO 'Книги' ('Id', 'Название') VALUES ($idBook, $name);
-          INSERT INTO 'КнигиПользователи' ('Id_книги', 'Id_пользователя') VALUES ($idBook, $idUser)";
+        command.CommandText = @"INSERT INTO 'Книги' ('Id', 'Название') VALUES ($idBook, $name)";
         command.Parameters.AddWithValue("$idBook", book.Id);
         command.Parameters.AddWithValue("$name", book.Title);
-        command.Parameters.AddWithValue("$idUser", userId);
 
         var reader = command.ExecuteNonQuery();
         connection.Close();
