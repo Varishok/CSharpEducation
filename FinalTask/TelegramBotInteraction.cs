@@ -149,13 +149,20 @@ namespace FinalTask
           {
             InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
           }));
-      for (int i = 0; i < books.Count; i++)
+      if (books.Count > 0)
       {
-        lines += $"{i+1}. {books[i].Title} \n";
-        list.Add(new List<InlineKeyboardButton>(new[]
-          {
+        for (int i = 0; i < books.Count; i++)
+        {
+          lines += $"{i + 1}. {books[i].Title} \n";
+          list.Add(new List<InlineKeyboardButton>(new[]
+            {
             InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/libraryBook {books[i].Id}"),
           }));
+        }
+      }
+      else
+      {
+        lines = "По заданному фильтру книги не найдены.";
       }
 
       await botClient.SendTextMessageAsync(
@@ -225,7 +232,7 @@ namespace FinalTask
       if(mark > 0)
       {
         var filter = (Book.Status)Enum.GetValues(typeof(Book.Status)).GetValue(mark);
-        books = new List<Book>(books.Where(x => x.Mark == filter));
+        books = books.Where(x => x.Mark == filter).ToList();
       }
 
       list.Add(new List<InlineKeyboardButton>(new[]
@@ -239,14 +246,23 @@ namespace FinalTask
             InlineKeyboardButton.WithCallbackData(text: "На чтении", callbackData: $"/myLibrary 2"),
             InlineKeyboardButton.WithCallbackData(text: "Прочитаны", callbackData: $"/myLibrary 3"),
           }));
-      for (int i = 0; i < books.Count; i++)
+
+      if (books.Count > 0)
       {
-        lines += $"{i + 1}. {books[i].Title} \n";
-        list.Add(new List<InlineKeyboardButton>(new[]
-          {
+        for (int i = 0; i < books.Count; i++)
+        {
+          lines += $"{i + 1}. {books[i].Title} \n";
+          list.Add(new List<InlineKeyboardButton>(new[]
+            {
             InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/myLibraryBook {books[i].Id}")
           }));
+        }
       }
+      else
+      {
+        lines = "По заданному фильтру книги не найдены.";
+      }
+      
 
       await botClient.SendTextMessageAsync(
         message.Chat,
