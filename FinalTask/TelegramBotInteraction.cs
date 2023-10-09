@@ -42,6 +42,20 @@ namespace FinalTask
     }
 
     /// <summary>
+    /// Удаление текущего сообщения.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    public static async void DeleteMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+    {
+      await botClient.DeleteMessageAsync(
+        chatId: message.Chat.Id, 
+        messageId: message.MessageId, 
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
     /// Добавление нового пользователя - начало.
     /// </summary>
     /// <param name="botClient">Клиент телеграмм бота.</param>
@@ -129,6 +143,11 @@ namespace FinalTask
       var books = DBInteraction.GetAllBookNames(currentUser.Id);
       var list = new List<List<InlineKeyboardButton>>();
       var lines = string.Empty;
+
+      list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu")
+          }));
       for (int i = 0; i < books.Count; i++)
       {
         lines += $"{i+1}. {books[i].Title} \n";
@@ -172,6 +191,14 @@ namespace FinalTask
         cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Добавление книги в библиотеку пользователя.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    /// <param name="bookId">Ид книги.</param>
     public static async void LibraryAddBookToUser(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
     {
       DBInteraction.AddBookToUser(currentUser.Id, bookId);

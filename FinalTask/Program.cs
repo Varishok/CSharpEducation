@@ -49,6 +49,14 @@ namespace FinalTask
         
         if(currentUser == null) { return; }
 
+        TelegramBotInteraction.DeleteMessage(botClient, message, cancellationToken);
+
+        if(codeOfButton == "/mainMenu") // Возврат в главное меню
+        {
+          TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
+          return;
+        }
+
         if (codeOfButton == "/newUserCreate") // Создание пользователя с существующим именем.
         {
           TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
