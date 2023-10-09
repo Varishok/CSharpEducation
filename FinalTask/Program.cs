@@ -3,15 +3,12 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Polling;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot.Types.ReplyMarkups;
-using System;
 
 namespace FinalTask
 {
   internal class Program
   {
     static ITelegramBotClient bot;
-    static List<User> users = new List<User>();
-    static List<Book> books = new List<Book>();
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
       // Некоторые действия
@@ -19,12 +16,12 @@ namespace FinalTask
       if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
       {
         InlineKeyboardMarkup inlineKeyboard;
-        var currentUser = users.Where(x => x.Id == update.Message.Chat.Id).FirstOrDefault();
         var message = update.Message;
+        var currentUser = DBInteraction.FindUser(message.Chat.Id);
 
         if (currentUser == null) // Новый пользователь
         {
-          TelegramBotInteraction.NewUserCreateStart(botClient, message, cancellationToken, users);
+          TelegramBotInteraction.NewUserCreateStart(botClient, message, cancellationToken);
           return;
         }
 
@@ -36,7 +33,7 @@ namespace FinalTask
 
         if (currentUser.Mark == User.Status.OnCreateBookTitle) // Создание книги - конец
         {
-          TelegramBotInteraction.CreateNewBookEnd(botClient, message, cancellationToken, currentUser, books);
+          TelegramBotInteraction.CreateNewBookEnd(botClient, message, cancellationToken, currentUser);
           return;
         }
 
@@ -45,51 +42,49 @@ namespace FinalTask
 
       if (update.Type == Telegram.Bot.Types.Enums.UpdateType.CallbackQuery)
       {
-        var currentUser = users.Where(x => x.Id == update.CallbackQuery.Message.Chat.Id).FirstOrDefault();
-        var codeOfButton = update.CallbackQuery.Data;
+        var callbackData = update.CallbackQuery.Data.Split();
+        var codeOfButton = callbackData[0];
         var message = update.CallbackQuery.Message;
+        var currentUser = DBInteraction.FindUser(message.Chat.Id);
+        
+        if(currentUser == null) { return; }
 
         if (codeOfButton == "/newUserCreate") // Создание пользователя с существующим именем.
         {
-          if (currentUser != null)
-          {
-            TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
-            return;
-          }
+          TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
+          return;
         }
 
         if(codeOfButton == "/userUpdateName") // Изменение имени пользователя - начало
         {
-          if (currentUser != null)
-          {
-            TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
-            return;
-          }
+          TelegramBotInteraction.UpdateUserNameStart(botClient, message, cancellationToken, currentUser);
+          return;
         }
 
         if (codeOfButton == "/library") // Вывод общей библиотеки
         {
-          if (currentUser != null)
-          {
-            TelegramBotInteraction.Library(botClient, message, cancellationToken, books);
-            return;
-          }
+          var books = DBInteraction.GetAllBookNames(currentUser.Id);
+          TelegramBotInteraction.Library(botClient, message, cancellationToken, books);
+          return;
         }
 
         if (codeOfButton == "/addBook") // Создание книги - начало
         {
-          if (currentUser != null)
-          {
-            TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
-            return;
-          }
+          TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
+        if(codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
+        {
+          
+          return;
         }
       }
     }
 
     public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-      // Некоторые действия
+      // Вывод ошибки в консоль
       Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
     }
 
