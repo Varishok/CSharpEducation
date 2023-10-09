@@ -14,16 +14,12 @@
     {
       OnStart,
       OnCreatedName,
-      OnUpdatedName,
       OnCreateBookTitle,
+      OnUpdateBook,
       OnUpdateBookTitle,
-      OnCreateBookAuthor,
       OnUpdateBookAuthor,
-      OnCreateBookDescription,
       OnUpdateBookDescription,
-      OnCreateBookFilePath,
       OnUpdateBookFilePath,
-      OnUpdateBookMark,
     }
 
     #endregion
@@ -53,18 +49,26 @@
     /// Конструктор.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    public User(long id) : this(id, String.Empty) { }
+    public User(long id) : this(id, String.Empty, Status.OnStart) { }
 
     /// <summary>
     /// Конструктор.
     /// </summary>
     /// <param name="id">Ид пользователя.</param>
     /// <param name="name">Имя пользователя.</param>
-    public User(long id, string name)
+    public User(long id, string name) : this(id, name, Status.OnStart) { }
+
+    /// <summary>
+    /// Конструктор.
+    /// </summary>
+    /// <param name="id">Ид пользователя.</param>
+    /// <param name="name">Имя пользователя.</param>
+    /// <param name="mark">Статус пользователя.</param>
+    public User(long id, string name, Status mark)
     {
       this.Id = id;
       this.Name = name;
-      this.Mark = Status.OnStart;
+      this.Mark = mark;
     }
 
     #endregion
