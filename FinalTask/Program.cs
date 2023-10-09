@@ -79,6 +79,13 @@ namespace FinalTask
           TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
           return;
         }
+
+        if(codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
+        {
+          var bookId = callbackData[1];
+          TelegramBotInteraction.LibraryAddBookToUser(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
       }
     }
 

@@ -47,7 +47,6 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <param name="users">Список пользователей.</param>
     public static async void NewUserCreateStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
       InlineKeyboardMarkup inlineKeyboard = new(new[]
@@ -73,7 +72,7 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <param name="currentUser">Текущий пользователь.</param>
+    /// <param name="newUser">Новый пользователь.</param>
     public static async void NewUserCreateEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User newUser)
     {
       DBInteraction.UpdateUserName(newUser.Id, message.Chat.Username);
@@ -124,7 +123,7 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <param name="books">Список книг.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
     public static async void Library(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       var books = DBInteraction.GetAllBookNames(currentUser.Id);
@@ -146,6 +145,13 @@ namespace FinalTask
         cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Данные о книге из общей библиотеки.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="bookId">Ид книги.</param>
     public static async void LibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, string bookId)
     {
       var book = DBInteraction.GetBook(bookId);
@@ -163,6 +169,16 @@ namespace FinalTask
         message.Chat,
         lines,
         replyMarkup: inlineKeyboard,
+        cancellationToken: cancellationToken);
+    }
+
+    public static async void LibraryAddBookToUser(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      DBInteraction.AddBookToUser(currentUser.Id, bookId);
+
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        "Книжка добавлена в вашу библиотеку.",
         cancellationToken: cancellationToken);
     }
 
@@ -188,10 +204,12 @@ namespace FinalTask
     /// <param name="botClient">Клиент телеграмм бота.</param>
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <param name="books">Библиотека книжек.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
     public static async void CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
-      DBInteraction.CreateBook(currentUser.Id, new Book(title: message.Text));
+      var book = new Book(title: message.Text);
+      DBInteraction.CreateBook(book);
+      DBInteraction.AddBookToUser(currentUser.Id, book.Id.ToString());
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
       await botClient.SendTextMessageAsync(
         message.Chat,

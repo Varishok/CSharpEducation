@@ -108,7 +108,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"INSERT INTO 'КнигиПользователи' ('Id_книги', 'Id_пользователя') VALUES ($idBook, $idUser)";
-        command.Parameters.AddWithValue("$idBook", bookId);
+        command.Parameters.AddWithValue("$idBook", bookId.ToUpper());
         command.Parameters.AddWithValue("$idUser", userId);
 
         var reader = command.ExecuteNonQuery();
