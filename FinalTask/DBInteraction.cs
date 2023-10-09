@@ -121,7 +121,7 @@ namespace FinalTask
     /// </summary>
     /// <param name="userId">Ид пользователя.</param>
     /// <returns>Список книг.</returns>
-    public static List<Book> GetAllBookNames(long userId)
+    public static List<Book> GetAllBooks(long userId)
     {
       var books = new List<Book>();
       using (var connection = new SqliteConnection(Config))
@@ -140,6 +140,34 @@ namespace FinalTask
           {
             var book = new Book(title: (string)reader.GetValue(1));
             book.Id = new Guid((string)reader.GetValue(0));
+            books.Add(book);
+          }
+        }
+        connection.Close();
+      }
+      return books;
+    }
+
+    public static List<Book> GetUserBooks(long userId)
+    {
+      var books = new List<Book>();
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"SELECT 'Книги'.Id, 'Книги'.'Название', 'КнигиПользователи'.'Состояние_книги' FROM 'Книги' 
+          JOIN 'КнигиПользователи' ON 'Книги'.Id = 'КнигиПользователи'.'Id_книги'
+          WHERE 'Книги'.Id IN (SELECT Id_книги From 'КнигиПользователи' WHERE Id_пользователя=$id)";
+        command.Parameters.AddWithValue("$id", userId);
+
+        using (var reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            var book = new Book(title: (string)reader.GetValue(1));
+            book.Id = new Guid((string)reader.GetValue(0));
+            book.Mark = (Book.Status)Enum.GetValues(typeof(Book.Status)).GetValue((long)reader.GetValue(2));
             books.Add(book);
           }
         }
