@@ -21,7 +21,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT Id, Имя, Id_состояния From 'Пользователи' WHERE Id = $id";
+        command.CommandText = @"SELECT Id, Name, User_status From Users WHERE Id = $id";
         command.Parameters.AddWithValue("$id", userId);
 
         using(var reader = command.ExecuteReader())
@@ -50,7 +50,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO 'Пользователи' ('Id') VALUES ($id)";
+        command.CommandText = @"INSERT INTO Users ('Id') VALUES ($id)";
         command.Parameters.AddWithValue("$id", userId);
 
         var reader = command.ExecuteNonQuery();
@@ -70,7 +70,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"UPDATE 'Пользователи' SET Id_состояния=$mark WHERE Id=$id";
+        command.CommandText = @"UPDATE Users SET User_status=$mark WHERE Id=$id";
         command.Parameters.AddWithValue("$id", userId);
         command.Parameters.AddWithValue("$mark", (long)mark);
 
@@ -83,7 +83,7 @@ namespace FinalTask
     /// Обновление имени пользователя.
     /// </summary>
     /// <param name="userId">Ид пользователя.</param>
-    /// <param name="userName">Новое имя.</param>
+    /// <param name="userName">Новое Name.</param>
     public static void UpdateUserName(long userId, string userName)
     {
       using (var connection = new SqliteConnection(Config))
@@ -91,7 +91,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"UPDATE 'Пользователи' SET Имя=$name WHERE Id=$id";
+        command.CommandText = @"UPDATE Users SET Name=$name WHERE Id=$id";
         command.Parameters.AddWithValue("$id", userId);
         command.Parameters.AddWithValue("$name", userName);
 
@@ -107,7 +107,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO 'КнигиПользователи' ('Id_книги', 'Id_пользователя') VALUES ($idBook, $idUser)";
+        command.CommandText = @"INSERT INTO BooksUsers (Id_book, Id_user) VALUES ($idBook, $idUser)";
         command.Parameters.AddWithValue("$idBook", bookId.ToUpper());
         command.Parameters.AddWithValue("$idUser", userId);
 
@@ -129,9 +129,9 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT Id, Название FROM 'Книги' 
-          WHERE Id NOT IN (SELECT Id_книги From 'КнигиПользователи' 
-          WHERE Id_пользователя=$id)";
+        command.CommandText = @"SELECT Id, Title FROM Books 
+          WHERE Id NOT IN (SELECT Id_book From BooksUsers 
+          WHERE Id_user=$id)";
         command.Parameters.AddWithValue("$id", userId);
 
         using (var reader = command.ExecuteReader())
@@ -156,9 +156,9 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT 'Книги'.Id, 'Книги'.'Название', 'КнигиПользователи'.'Состояние_книги' FROM 'Книги' 
-          JOIN 'КнигиПользователи' ON 'Книги'.Id = 'КнигиПользователи'.'Id_книги'
-          WHERE 'Книги'.Id IN (SELECT Id_книги From 'КнигиПользователи' WHERE Id_пользователя=$id)";
+        command.CommandText = @"SELECT Books.Id, Books.Name, BooksUsers.Book_status FROM Books
+          JOIN BooksUsers ON Books.Id = BooksUsers.Id_book
+          WHERE Books.Id IN (SELECT Id_book From BooksUsers WHERE Id_user=$id)";
         command.Parameters.AddWithValue("$id", userId);
 
         using (var reader = command.ExecuteReader())
@@ -187,7 +187,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO 'Книги' ('Id', 'Название') VALUES ($idBook, $name)";
+        command.CommandText = @"INSERT INTO Books (Id, Title) VALUES ($idBook, $name)";
         command.Parameters.AddWithValue("$idBook", book.Id);
         command.Parameters.AddWithValue("$name", book.Title);
 
@@ -208,7 +208,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT Id, Название, Автор, Описание FROM 'Книги' WHERE Id=$id";
+        command.CommandText = @"SELECT Id, Title, Author, Description FROM Books WHERE Id=$id";
         command.Parameters.AddWithValue("$id", bookId.ToUpper());
 
         using (var reader = command.ExecuteReader())
