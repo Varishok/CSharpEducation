@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Telegram.Bot.Types;
 
 namespace FinalTask
 {
@@ -230,6 +231,85 @@ namespace FinalTask
         connection.Close();
       }
       return null;
+    }
+
+    /// <summary>
+    /// Обновление названия книги.
+    /// </summary>
+    /// <param name="bookId">Id книги.</param>
+    /// <param name="bookTitle">Новое название книги.</param>
+    public static void UpdateBookTitle(string bookId, string bookTitle)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE Books SET Title=$title WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$title", bookTitle);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
+    /// <summary>
+    /// Обновление автора книги.
+    /// </summary>
+    /// <param name="bookId">Id книги.</param>
+    /// <param name="bookAuthor">Новый автор книги.</param>
+    public static void UpdateBookAuthor(string bookId, string bookAuthor)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE Books SET Author=$author WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$author", bookAuthor);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
+    /// <summary>
+    /// Обновление описания книги.
+    /// </summary>
+    /// <param name="bookId">Id книги.</param>
+    /// <param name="bookDescription">Новое описание книги.</param>
+    public static void UpdateBookDescription(string bookId, string bookDescription)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE Books SET Description=$description WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$description", bookDescription);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
+    public static void UpdateBookFile(string bookId, byte[] bookFile)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE Books SET File=$file WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$file", bookFile);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
     }
   }
 }
