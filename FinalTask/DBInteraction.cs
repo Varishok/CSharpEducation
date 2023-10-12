@@ -296,6 +296,11 @@ namespace FinalTask
       }
     }
 
+    /// <summary>
+    /// Обновление файла книги.
+    /// </summary>
+    /// <param name="bookId">Id книги.</param>
+    /// <param name="bookFile">Новый файл книги.</param>
     public static void UpdateBookFile(string bookId, byte[] bookFile)
     {
       using (var connection = new SqliteConnection(Config))
@@ -306,6 +311,28 @@ namespace FinalTask
         command.CommandText = @"UPDATE Books SET File=$file WHERE Id=$id";
         command.Parameters.AddWithValue("$id", bookId);
         command.Parameters.AddWithValue("$file", bookFile);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
+    /// <summary>
+    /// Обновления состояния пользователя.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <param name="mark">Новое состояние.</param>
+    public static void UpdateBookMark(string bookId, long userId, Book.Status mark)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE BooksUsers SET Book_status=$mark WHERE Id_book=$idBook AND Id_user=$idUser";
+        command.Parameters.AddWithValue("$idBook", bookId);
+        command.Parameters.AddWithValue("$idUser", userId);
+        command.Parameters.AddWithValue("$mark", (long)mark);
 
         var reader = command.ExecuteNonQuery();
         connection.Close();
