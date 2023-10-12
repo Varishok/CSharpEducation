@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using Telegram.Bot.Types;
 
 namespace FinalTask
 {
@@ -211,6 +210,34 @@ namespace FinalTask
         connection.Close();
       }
       return books;
+    }
+
+    /// <summary>
+    /// Получение изменяемой пользователем книги.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <returns>Найденное ид изменяемой книги, в противном случае пустая строка.</returns>
+    public static string GetUserChangedBookId(long userId)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"SELECT Changed_book FROM Users WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", userId);
+
+        using (var reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            var bookId = reader.GetValue(0) != DBNull.Value ? (string)reader.GetValue(2) : String.Empty;
+            return bookId;
+          }
+        }
+        connection.Close();
+      }
+      return String.Empty;
     }
 
     /// <summary>
