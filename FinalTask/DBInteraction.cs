@@ -105,6 +105,27 @@ namespace FinalTask
     }
 
     /// <summary>
+    /// Обновления изменяемой книги пользователя.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <param name="bookId">Ид книги.</param>
+    public static void UpdateUserChangedBook(long userId, string bookId)
+    {
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"UPDATE Users SET Changed_book=$idBook WHERE Id=$idUser";
+        command.Parameters.AddWithValue("$idUser", userId);
+        command.Parameters.AddWithValue("$idBook", bookId);
+
+        var reader = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+
+    /// <summary>
     /// Добавление связи между пользователем и книгой.
     /// </summary>
     /// <param name="userId">Ид пользователя.</param>
@@ -140,7 +161,8 @@ namespace FinalTask
         var command = connection.CreateCommand();
         command.CommandText = @"SELECT Id, Title FROM Books 
           WHERE Id NOT IN (SELECT Id_book From BooksUsers 
-          WHERE Id_user=$id)";
+          WHERE Id_user=$id)
+          ORDER BY Title";
         command.Parameters.AddWithValue("$id", userId);
 
         using (var reader = command.ExecuteReader())
@@ -172,7 +194,8 @@ namespace FinalTask
         var command = connection.CreateCommand();
         command.CommandText = @"SELECT Books.Id, Books.Title, BooksUsers.Book_status FROM Books
           JOIN BooksUsers ON Books.Id = BooksUsers.Id_book
-          WHERE Books.Id IN (SELECT Id_book From BooksUsers WHERE Id_user=$id)";
+          WHERE Books.Id IN (SELECT Id_book From BooksUsers WHERE Id_user=$id)
+          ORDER BY Books.Title";
         command.Parameters.AddWithValue("$id", userId);
 
         using (var reader = command.ExecuteReader())
@@ -216,7 +239,7 @@ namespace FinalTask
     /// </summary>
     /// <param name="bookId">Id книги.</param>
     /// <returns>Найденная книга, в противном случае null.</returns>
-    public static Book GetBook(string bookId)
+    public static Book? GetBook(string bookId)
     {
       using (var connection = new SqliteConnection(Config))
       {
