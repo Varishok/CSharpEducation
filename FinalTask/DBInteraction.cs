@@ -8,14 +8,17 @@ namespace FinalTask
   /// </summary>
   internal static class DBInteraction
   {
+    /// <summary>
+    /// Параметры базы данных.
+    /// </summary>
     const string Config = "Data Source=library.db";
 
     /// <summary>
     /// Существование пользователя в базе.
     /// </summary>
     /// <param name="userId">Ид пользователя.</param>
-    /// <returns>True - пользователь найден, иначе - false.</returns>
-    public static User FindUser(long userId)
+    /// <returns>Пользователя, если он найден, null - в противном случае.</returns>
+    public static User? FindUser(long userId)
     {
       using(var connection = new SqliteConnection(Config))
       {
@@ -101,6 +104,11 @@ namespace FinalTask
       }
     }
 
+    /// <summary>
+    /// Добавление связи между пользователем и книгой.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <param name="bookId">Ид книги.</param>
     public static void AddBookToUser(long userId, string bookId)
     {
       using (var connection = new SqliteConnection(Config))
@@ -149,6 +157,11 @@ namespace FinalTask
       return books;
     }
 
+    /// <summary>
+    /// Получение книг связанных с пользователем.
+    /// </summary>
+    /// <param name="userId">Ид пользователя.</param>
+    /// <returns>Список книг связанных с пользователем.</returns>
     public static List<Book> GetUserBooks(long userId)
     {
       var books = new List<Book>();
@@ -157,7 +170,7 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT Books.Id, Books.Name, BooksUsers.Book_status FROM Books
+        command.CommandText = @"SELECT Books.Id, Books.Title, BooksUsers.Book_status FROM Books
           JOIN BooksUsers ON Books.Id = BooksUsers.Id_book
           WHERE Books.Id IN (SELECT Id_book From BooksUsers WHERE Id_user=$id)";
         command.Parameters.AddWithValue("$id", userId);

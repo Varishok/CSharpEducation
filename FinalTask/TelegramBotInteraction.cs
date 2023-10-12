@@ -340,6 +340,23 @@ namespace FinalTask
         message.Chat,
         $"Книга с названием '{message.Text}' создана.",
         cancellationToken: cancellationToken);
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, book.Id.ToString());
+    }
+
+    /// <summary>
+    /// Обновление названия книги - начало.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task UpdateBookTitleStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnUpdateBookTitle);
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Введите название книги.",
+        cancellationToken: cancellationToken);
     }
   }
 }
