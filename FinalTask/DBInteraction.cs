@@ -208,7 +208,8 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT Id, Title, Author, Description FROM Books WHERE Id=$id";
+        command.CommandText = @"SELECT Books.Id, Books.Title, Books.Author, Books.Description, Books.AddedBy, Users.Name 
+          FROM Books JOIN Users ON Books.AddedBy = Users.Id WHERE Books.Id=$id";
         command.Parameters.AddWithValue("$id", bookId.ToUpper());
 
         using (var reader = command.ExecuteReader())
@@ -219,7 +220,8 @@ namespace FinalTask
             var title = (string)reader.GetValue(1);
             var author = reader.GetValue(2) != DBNull.Value ? (string)reader.GetValue(2) : String.Empty;
             var description = reader.GetValue(3) != DBNull.Value ? (string)reader.GetValue(3) : String.Empty;
-            var book = new Book(title: title, author: author, description: description);
+            var addedBy = reader.GetValue(4) != DBNull.Value ? new User((long)reader.GetValue(4), (string)reader.GetValue(5)) : null;
+            var book = new Book(title: title, author: author, description: description, addedBy: addedBy);
             book.Id = new Guid(id);
             return book;
           }

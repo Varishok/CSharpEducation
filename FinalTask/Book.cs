@@ -43,9 +43,14 @@
     public string Description { get; set; }
 
     /// <summary>
+    /// Пользователь добавивший книгу.
+    /// </summary>
+    public User AddedBy { get; set; }
+
+    /// <summary>
     /// Путь к файлу.
     /// </summary>
-    public string FilePath { get; set; }
+    public byte[] File { get; set; }
 
     /// <summary>
     /// Статус.
@@ -60,14 +65,14 @@
     /// Конструктор.
     /// </summary>
     /// <param name="title">Название книги.</param>
-    public Book(string title) : this(title, string.Empty, string.Empty, string.Empty) { }
+    public Book(string title) : this(title, string.Empty, string.Empty, null, null) { }
 
     /// <summary>
     /// Конструктор.
     /// </summary>
     /// <param name="title">Название книги.</param>
     /// <param name="author">Автор книги.</param>
-    public Book(string title, string author) : this(title, author, string.Empty, string.Empty) { }
+    public Book(string title, string author) : this(title, author, string.Empty, null, null) { }
 
     /// <summary>
     /// Конструктор.
@@ -75,7 +80,7 @@
     /// <param name="title">Название книги.</param>
     /// <param name="author">Автор книги.</param>
     /// <param name="description">Описание книги.</param>
-    public Book(string title, string author, string description) : this(title, author, description, string.Empty) { }
+    public Book(string title, string author, string description) : this(title, author, description, null, null) { }
 
     /// <summary>
     /// Конструктор.
@@ -84,13 +89,24 @@
     /// <param name="author">Автор книги.</param>
     /// <param name="description">Описание книги</param>
     /// <param name="filePath">Путь к файлу.</param>
-    public Book(string title, string author, string description, string filePath)
+    public Book(string title, string author, string description, User addedBy) : this(title, author, description, addedBy, null) { }
+
+    /// <summary>
+    /// Конструктор.
+    /// </summary>
+    /// <param name="title">Название книги.</param>
+    /// <param name="author">Автор книги.</param>
+    /// <param name="description">Описание книги</param>
+    /// <param name="filePath">Путь к файлу.</param>
+    /// <param name="addedBy">Пользователь добавивший книгу.</param>
+    public Book(string title, string author, string description, User addedBy, byte[] file)
     {
       this.Id = Guid.NewGuid();
       this.Title = title;
       this.Author = author;
       this.Description = description;
-      this.FilePath = filePath;
+      this.AddedBy = addedBy;
+      this.File = file;
       this.Mark = Status.Available;
     }
 
