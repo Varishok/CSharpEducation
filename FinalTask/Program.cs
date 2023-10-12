@@ -104,10 +104,10 @@ namespace FinalTask
           return;
         }
 
-        if (codeOfButton == "/myLibraryBook") // Вывод книги из общей библиотеки
+        if (codeOfButton == "/myLibraryBook") // Вывод книги из пользовательской библиотеки
         {
           var bookId = callbackData[1];
-          await TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
+          await TelegramBotInteraction.MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
           return;
         }
 

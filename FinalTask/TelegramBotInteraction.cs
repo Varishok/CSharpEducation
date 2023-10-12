@@ -236,16 +236,16 @@ namespace FinalTask
       }
 
       list.Add(new List<InlineKeyboardButton>(new[]
-          {
-            InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
-            InlineKeyboardButton.WithCallbackData(text: "Без фильтра", callbackData: $"/myLibrary 0"),
-          }));
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
+          InlineKeyboardButton.WithCallbackData(text: "Без фильтра", callbackData: $"/myLibrary 0"),
+        }));
       list.Add(new List<InlineKeyboardButton>(new[]
-          {
-            InlineKeyboardButton.WithCallbackData(text: "Добавлены", callbackData: $"/myLibrary 1"),
-            InlineKeyboardButton.WithCallbackData(text: "На чтении", callbackData: $"/myLibrary 2"),
-            InlineKeyboardButton.WithCallbackData(text: "Прочитаны", callbackData: $"/myLibrary 3"),
-          }));
+        {
+          InlineKeyboardButton.WithCallbackData(text: "Добавлены", callbackData: $"/myLibrary 1"),
+          InlineKeyboardButton.WithCallbackData(text: "На чтении", callbackData: $"/myLibrary 2"),
+          InlineKeyboardButton.WithCallbackData(text: "Прочитаны", callbackData: $"/myLibrary 3"),
+        }));
 
       if (books.Count > 0)
       {
@@ -254,8 +254,8 @@ namespace FinalTask
           lines += $"{i + 1}. {books[i].Title} \n";
           list.Add(new List<InlineKeyboardButton>(new[]
             {
-            InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/myLibraryBook {books[i].Id}")
-          }));
+              InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/myLibraryBook {books[i].Id}")
+            }));
         }
       }
       else
@@ -274,35 +274,36 @@ namespace FinalTask
     public static async Task MyLibraryBook(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
     {
       var book = DBInteraction.GetBook(bookId);
-      InlineKeyboardMarkup inlineKeyboard = new(new[]
-      {
-        new[]
+      var list = new List<List<InlineKeyboardButton>>();
+      list.Add(new List<InlineKeyboardButton>(new[]
         {
           InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "/library"),
           InlineKeyboardButton.WithCallbackData(text: "Предоставить файл", callbackData: $"/checkFile {bookId}"),
-        },
-        new[]
+        }));
+      if(currentUser.Id == book.AddedBy.Id)
+      {
+        list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: "Изменить название", callbackData: $"/bookChangeTitle {bookId}"),
+            InlineKeyboardButton.WithCallbackData(text: "Изменить автора", callbackData: $"/bookChangeAuthor {bookId}"),
+          }));
+        list.Add(new List<InlineKeyboardButton>(new[]
+          {
+            InlineKeyboardButton.WithCallbackData(text: "Изменить описание", callbackData: $"/bookChangeDescription {bookId}"),
+            InlineKeyboardButton.WithCallbackData(text: "Изменить файл", callbackData: $"/bookChangeFile {bookId}"),
+          }));
+      }
+      list.Add(new List<InlineKeyboardButton>(new[]
         {
-          InlineKeyboardButton.WithCallbackData(text: "Изменить название", callbackData: $"/bookChangeTitle {bookId}"),
-          InlineKeyboardButton.WithCallbackData(text: "Изменить автора", callbackData: $"/bookChangeAuthor {bookId}"),
-        },
-        new[]
-        {
-          InlineKeyboardButton.WithCallbackData(text: "Изменить описание", callbackData: $"/bookChangeDescription {bookId}"),
-          InlineKeyboardButton.WithCallbackData(text: "Изменить файл", callbackData: $"/bookChangeFile {bookId}"),
-        },
-        new[]
-        {
-          InlineKeyboardButton.WithCallbackData(text: "Читаю", callbackData: $"/bookChangeDescription {bookId}"),
-          InlineKeyboardButton.WithCallbackData(text: "Прочитал", callbackData: $"/bookChangeFile {bookId}"),
-        },
-      });
-      var lines = $"Название: '{book.Title}'\nАвтор: {book.Author}\nОписание: {book.Description}";
+          InlineKeyboardButton.WithCallbackData(text: "Читаю", callbackData: $"/bookChangeMark {bookId} 2"),
+          InlineKeyboardButton.WithCallbackData(text: "Прочитал", callbackData: $"/bookChangeMark {bookId} 3"),
+        }));
+      var lines = $"Название: '{book.Title}'\nАвтор: {book.Author}\nОписание: {book.Description}\nДобавлено:{book.AddedBy.Name}";
 
       await botClient.SendTextMessageAsync(
         message.Chat,
         lines,
-        replyMarkup: inlineKeyboard,
+        replyMarkup: new InlineKeyboardMarkup(list),
         cancellationToken: cancellationToken);
     }
 
