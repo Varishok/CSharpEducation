@@ -332,7 +332,7 @@ namespace FinalTask
     public static async Task CreateNewBookEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
     {
       var book = new Book(title: message.Text);
-      DBInteraction.CreateBook(book);
+      DBInteraction.CreateBook(book, currentUser);
       DBInteraction.AddBookToUser(currentUser.Id, book.Id.ToString());
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
       await botClient.SendTextMessageAsync(

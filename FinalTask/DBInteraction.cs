@@ -180,16 +180,17 @@ namespace FinalTask
     /// Сохранение данных о книге в бд.
     /// </summary>
     /// <param name="book">Книга.</param>
-    public static void CreateBook(Book book)
+    public static void CreateBook(Book book, User user)
     {
       using (var connection = new SqliteConnection(Config))
       {
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO Books (Id, Title) VALUES ($idBook, $name)";
+        command.CommandText = @"INSERT INTO Books (Id, Title, AddedBy) VALUES ($idBook, $name, $idUser)";
         command.Parameters.AddWithValue("$idBook", book.Id);
         command.Parameters.AddWithValue("$name", book.Title);
+        command.Parameters.AddWithValue("$idUser", user.Id);
 
         var reader = command.ExecuteNonQuery();
         connection.Close();
