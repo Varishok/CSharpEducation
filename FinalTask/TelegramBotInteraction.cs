@@ -1,7 +1,6 @@
 ﻿using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
-using System.Reflection.PortableExecutable;
 
 namespace FinalTask
 {
@@ -51,8 +50,8 @@ namespace FinalTask
     public static async Task DeleteMessage(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
     {
       await botClient.DeleteMessageAsync(
-        chatId: message.Chat.Id, 
-        messageId: message.MessageId, 
+        chatId: message.Chat.Id,
+        messageId: message.MessageId,
         cancellationToken: cancellationToken);
     }
 
@@ -149,7 +148,7 @@ namespace FinalTask
           {
             InlineKeyboardButton.WithCallbackData(text: "Главное меню", callbackData: $"/mainMenu"),
           }));
-      if (books.Count > 0)
+      if(books.Count > 0)
       {
         for (int i = 0; i < books.Count; i++)
         {
@@ -247,7 +246,7 @@ namespace FinalTask
           InlineKeyboardButton.WithCallbackData(text: "Прочитаны", callbackData: $"/myLibrary 3"),
         }));
 
-      if (books.Count > 0)
+      if(books.Count > 0)
       {
         for (int i = 0; i < books.Count; i++)
         {
@@ -262,7 +261,7 @@ namespace FinalTask
       {
         lines = "По заданному фильтру книги не найдены.";
       }
-      
+
 
       await botClient.SendTextMessageAsync(
         message.Chat,
@@ -277,7 +276,7 @@ namespace FinalTask
       var list = new List<List<InlineKeyboardButton>>();
       list.Add(new List<InlineKeyboardButton>(new[]
         {
-          InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "/library"),
+          InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "/myLibrary 0"),
           InlineKeyboardButton.WithCallbackData(text: "Предоставить файл", callbackData: $"/checkFile {bookId}"),
         }));
       if(currentUser.Id == book.AddedBy.Id)
@@ -305,6 +304,27 @@ namespace FinalTask
         lines,
         replyMarkup: new InlineKeyboardMarkup(list),
         cancellationToken: cancellationToken);
+    }
+
+    public static async Task MyLibraryBookFile(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      var book = DBInteraction.GetBookFile(bookId);
+      if(book.File != null)
+      {
+        using (var ms = new MemoryStream(book.File))
+        {
+          await botClient.SendDocumentAsync(message.Chat.Id, Telegram.Bot.Types.InputFile.FromStream(ms, $"{book.Title}.pdf"));
+          
+        }
+      }
+      else
+      {
+        await botClient.SendTextMessageAsync(
+          message.Chat,
+          $"У данной книги еще нет файла.",
+          cancellationToken: cancellationToken);
+      }
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
     }
 
     /// <summary>
@@ -350,13 +370,164 @@ namespace FinalTask
     /// <param name="message">Сообщение.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <param name="currentUser">Текущий пользователь.</param>
-    public static async Task UpdateBookTitleStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    /// <param name="bookId">Ид книги.</param>
+    public static async Task UpdateBookTitleStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
     {
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnUpdateBookTitle);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, bookId);
       await botClient.SendTextMessageAsync(
         message.Chat,
         $"Введите название книги.",
         cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Обновление названия книги - конец.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task UpdateBookTitleEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      string bookId = DBInteraction.GetUserChangedBookId(currentUser.Id);
+      string bookTitle = message.Text;
+      DBInteraction.UpdateBookTitle(bookId, bookTitle);
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, String.Empty);
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
+    }
+
+    /// <summary>
+    /// Обновление автора книги - начало.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    /// <param name="bookId">Ид книги.</param>
+    public static async Task UpdateBookAuthorStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnUpdateBookAuthor);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, bookId);
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Введите автора книги.",
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Обновление автора книги - конец.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task UpdateBookAuthorEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      string bookId = DBInteraction.GetUserChangedBookId(currentUser.Id);
+      string bookAuthor = message.Text;
+      DBInteraction.UpdateBookAuthor(bookId, bookAuthor);
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, String.Empty);
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
+    }
+
+    /// <summary>
+    /// Обновление описания книги - начало.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    /// <param name="bookId">Ид книги.</param>
+    public static async Task UpdateBookDescriptionStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnUpdateBookDescription);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, bookId);
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Введите описание книги.",
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Обновление описания книги - конец.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task UpdateBookDescriptionEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      string bookId = DBInteraction.GetUserChangedBookId(currentUser.Id);
+      string bookDescription = message.Text;
+      DBInteraction.UpdateBookDescription(bookId, bookDescription);
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, String.Empty);
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
+    }
+
+    /// <summary>
+    /// Обновление файла книги - начало.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    /// <param name="bookId">Ид книги.</param>
+    public static async Task UpdateBookFileStart(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser, string bookId)
+    {
+      DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnUpdateBookFile);
+      DBInteraction.UpdateUserChangedBook(currentUser.Id, bookId);
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Отправьте pdf файл книги.",
+        cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Обновление файла книги - конец.
+    /// </summary>
+    /// <param name="botClient">Клиент телеграмм бота.</param>
+    /// <param name="message">Сообщение.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <param name="currentUser">Текущий пользователь.</param>
+    public static async Task UpdateBookFileEnd(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken, User currentUser)
+    {
+      string bookFileType = message.Document.MimeType;
+      if(bookFileType == "application/pdf")
+      {
+        string bookId = DBInteraction.GetUserChangedBookId(currentUser.Id);
+        var bookFile = botClient.GetFileAsync(message.Document.FileId);
+        byte[] file = new byte[(int)message.Document.FileSize];
+        using (var ms = new MemoryStream(file))
+        {
+          await botClient.DownloadFileAsync(bookFile.Result.FilePath, ms);
+        }
+        DBInteraction.UpdateBookFile(bookId, file);
+        DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
+        DBInteraction.UpdateUserChangedBook(currentUser.Id, String.Empty);
+        await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
+      }
+      else
+      {
+        await botClient.SendTextMessageAsync(
+          message.Chat,
+          $"Отправьте pdf файл книги.",
+          cancellationToken: cancellationToken);
+      }
+    }
+
+    public static async Task UpdateBookMark(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken,
+      User currentUser, string bookId, Book.Status mark)
+    {
+      DBInteraction.UpdateBookMark(bookId, currentUser.Id, mark);
+      await botClient.SendTextMessageAsync(
+        message.Chat,
+        $"Статус книги обновлен.",
+        cancellationToken: cancellationToken);
+      await MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
     }
   }
 }
