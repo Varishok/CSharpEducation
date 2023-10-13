@@ -115,9 +115,16 @@ namespace FinalTask
         connection.Open();
 
         var command = connection.CreateCommand();
+        if(bookId == String.Empty)
+        {
+          command.CommandText = @"UPDATE Users SET Changed_book=NULL WHERE Id=$idUser";
+        }
+        else
+        {
         command.CommandText = @"UPDATE Users SET Changed_book=$idBook WHERE Id=$idUser";
+          command.Parameters.AddWithValue("$idBook", bookId.ToUpper());
+        }
         command.Parameters.AddWithValue("$idUser", userId);
-        command.Parameters.AddWithValue("$idBook", bookId);
 
         var reader = command.ExecuteNonQuery();
         connection.Close();
@@ -231,7 +238,7 @@ namespace FinalTask
         {
           while (reader.Read())
           {
-            var bookId = reader.GetValue(0) != DBNull.Value ? (string)reader.GetValue(2) : String.Empty;
+            var bookId = reader.GetValue(0) != DBNull.Value ? (string)reader.GetValue(0) : String.Empty;
             return bookId;
           }
         }
@@ -309,7 +316,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"UPDATE Books SET Title=$title WHERE Id=$id";
-        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
         command.Parameters.AddWithValue("$title", bookTitle);
 
         var reader = command.ExecuteNonQuery();
@@ -330,7 +337,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"UPDATE Books SET Author=$author WHERE Id=$id";
-        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
         command.Parameters.AddWithValue("$author", bookAuthor);
 
         var reader = command.ExecuteNonQuery();
@@ -351,7 +358,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"UPDATE Books SET Description=$description WHERE Id=$id";
-        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
         command.Parameters.AddWithValue("$description", bookDescription);
 
         var reader = command.ExecuteNonQuery();
@@ -372,7 +379,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"UPDATE Books SET File=$file WHERE Id=$id";
-        command.Parameters.AddWithValue("$id", bookId);
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
         command.Parameters.AddWithValue("$file", bookFile);
 
         var reader = command.ExecuteNonQuery();
@@ -393,7 +400,7 @@ namespace FinalTask
 
         var command = connection.CreateCommand();
         command.CommandText = @"UPDATE BooksUsers SET Book_status=$mark WHERE Id_book=$idBook AND Id_user=$idUser";
-        command.Parameters.AddWithValue("$idBook", bookId);
+        command.Parameters.AddWithValue("$idBook", bookId.ToUpper());
         command.Parameters.AddWithValue("$idUser", userId);
         command.Parameters.AddWithValue("$mark", (long)mark);
 
