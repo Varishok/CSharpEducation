@@ -89,7 +89,7 @@
     /// <param name="author">Автор книги.</param>
     /// <param name="description">Описание книги</param>
     /// <param name="filePath">Путь к файлу.</param>
-    public Book(string title, string author, string description, User addedBy) : this(title, author, description, addedBy, null) { }
+    public Book(string title, string author, string description, User? addedBy) : this(title, author, description, addedBy, null) { }
 
     /// <summary>
     /// Конструктор.
@@ -99,7 +99,7 @@
     /// <param name="description">Описание книги</param>
     /// <param name="filePath">Путь к файлу.</param>
     /// <param name="addedBy">Пользователь добавивший книгу.</param>
-    public Book(string title, string author, string description, User addedBy, byte[] file)
+    public Book(string title, string author, string description, User? addedBy, byte[] file)
     {
       this.Id = Guid.NewGuid();
       this.Title = title;
