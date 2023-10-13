@@ -121,7 +121,7 @@ namespace FinalTask
         }
         else
         {
-        command.CommandText = @"UPDATE Users SET Changed_book=$idBook WHERE Id=$idUser";
+          command.CommandText = @"UPDATE Users SET Changed_book=$idBook WHERE Id=$idUser";
           command.Parameters.AddWithValue("$idBook", bookId.ToUpper());
         }
         command.Parameters.AddWithValue("$idUser", userId);
@@ -301,6 +301,33 @@ namespace FinalTask
         connection.Close();
       }
       return null;
+    }
+
+    public static Book? GetBookFile(string bookId)
+    {
+      Book book = null;
+      using (var connection = new SqliteConnection(Config))
+      {
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"SELECT Title, File FROM Books WHERE Id=$id";
+        command.Parameters.AddWithValue("$id", bookId.ToUpper());
+
+        using (var reader = command.ExecuteReader())
+        {
+          while (reader.Read())
+          {
+            var title = (string)reader.GetString(0);
+            var file = reader.GetValue(1) != DBNull.Value ? (byte[])reader.GetValue(1) : null;
+            book = new Book(title: title, author: null, description: null, addedBy: null, file: file);
+            book.Id = new Guid(bookId);
+            return book;
+          }
+        }
+        connection.Close();
+      }
+      return book;
     }
 
     /// <summary>
