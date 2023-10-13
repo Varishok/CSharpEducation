@@ -19,7 +19,7 @@
       OnUpdateBookTitle,
       OnUpdateBookAuthor,
       OnUpdateBookDescription,
-      OnUpdateBookFilePath,
+      OnUpdateBookFile,
     }
 
     #endregion
