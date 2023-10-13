@@ -2,7 +2,6 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Polling;
 using Microsoft.Extensions.Configuration;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FinalTask
 {
@@ -46,6 +45,30 @@ namespace FinalTask
           return;
         }
 
+        if(currentUser.Mark == User.Status.OnUpdateBookTitle) // Изменение названия книги - конец
+        {
+          await TelegramBotInteraction.UpdateBookTitleEnd(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
+        if (currentUser.Mark == User.Status.OnUpdateBookAuthor) // Изменение автора книги - конец
+        {
+          await TelegramBotInteraction.UpdateBookAuthorEnd(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
+        if (currentUser.Mark == User.Status.OnUpdateBookDescription) // Изменение описания книги - конец
+        {
+          await TelegramBotInteraction.UpdateBookDescriptionEnd(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
+        if (currentUser.Mark == User.Status.OnUpdateBookFile) // Изменение файла книги - конец
+        {
+          await TelegramBotInteraction.UpdateBookFileEnd(botClient, message, cancellationToken, currentUser);
+          return;
+        }
+
         await TelegramBotInteraction.MainMenu(botClient, message, cancellationToken);
       }
 
@@ -66,7 +89,7 @@ namespace FinalTask
           return;
         }
 
-        if (codeOfButton == "/newUserCreate") // Создание пользователя с существующим именем.
+        if(codeOfButton == "/newUserCreate") // Создание пользователя с существующим именем.
         {
           await TelegramBotInteraction.NewUserCreateEnd(botClient, message, cancellationToken, currentUser);
           return;
@@ -78,44 +101,86 @@ namespace FinalTask
           return;
         }
 
-        if (codeOfButton == "/library") // Вывод общей библиотеки
+        if(codeOfButton == "/library") // Вывод общей библиотеки
         {
           await TelegramBotInteraction.Library(botClient, message, cancellationToken, currentUser);
           return;
         }
 
-        if (codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
+        if(codeOfButton == "/libraryBook") // Вывод книги из общей библиотеки
         {
           var bookId = callbackData[1];
           await TelegramBotInteraction.LibraryBook(botClient, message, cancellationToken, bookId);
           return;
         }
 
-        if (codeOfButton == "/addBook") // Создание книги - начало
+        if(codeOfButton == "/addBook") // Создание книги - начало
         {
           await TelegramBotInteraction.CreateNewBookStart(botClient, message, cancellationToken, currentUser);
           return;
         }
 
-        if (codeOfButton == "/myLibrary") // Вывод библиотеки пользователя с фильтром или без
+        if(codeOfButton == "/myLibrary") // Вывод библиотеки пользователя с фильтром или без
         {
           var filter = Convert.ToInt32(callbackData[1]);
           await TelegramBotInteraction.MyLibrary(botClient, message, cancellationToken, currentUser, filter);
           return;
         }
 
-        if (codeOfButton == "/myLibraryBook") // Вывод книги из пользовательской библиотеки
+        if(codeOfButton == "/myLibraryBook") // Вывод книги из пользовательской библиотеки
         {
           var bookId = callbackData[1];
           await TelegramBotInteraction.MyLibraryBook(botClient, message, cancellationToken, currentUser, bookId);
           return;
         }
 
-        if (codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
+        if(codeOfButton == "/checkFile") // Вывод файла книги из пользовательской библиотеки
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.MyLibraryBookFile(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
+
+        if(codeOfButton == "/myLibraryAdd") // Добавление книжки пользователю
         {
           var bookId = callbackData[1];
           await TelegramBotInteraction.LibraryAddBookToUser(botClient, message, cancellationToken, currentUser, bookId);
           return;
+        }
+
+        if(codeOfButton == "/bookChangeTitle") // Изменение названия книги
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.UpdateBookTitleStart(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
+
+        if(codeOfButton == "/bookChangeAuthor") // Изменение автора книги
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.UpdateBookAuthorStart(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
+
+        if(codeOfButton == "/bookChangeDescription") // Изменение описания книги
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.UpdateBookDescriptionStart(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
+
+        if(codeOfButton == "/bookChangeFile") // Изменение файла книги
+        {
+          var bookId = callbackData[1];
+          await TelegramBotInteraction.UpdateBookFileStart(botClient, message, cancellationToken, currentUser, bookId);
+          return;
+        }
+
+        if(codeOfButton == "/bookChangeMark") // Изменение статуса книги
+        {
+          var bookId = callbackData[1];
+          var mark = (Book.Status)Enum.GetValues(typeof(Book.Status)).GetValue(Convert.ToInt32(callbackData[2]));
+          await TelegramBotInteraction.UpdateBookMark(botClient, message, cancellationToken, currentUser, bookId, mark);
         }
       }
     }
