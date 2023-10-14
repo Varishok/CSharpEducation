@@ -152,7 +152,7 @@ namespace FinalTask
       {
         for (int i = 0; i < books.Count; i++)
         {
-          lines += $"{i + 1}. {books[i].Title}\nАвтор: {books[i].Author}\n";
+          lines += $"{i + 1}. {books[i].Title} \n";
           list.Add(new List<InlineKeyboardButton>(new[]
             {
             InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/libraryBook {books[i].Id}"),
@@ -250,7 +250,7 @@ namespace FinalTask
       {
         for (int i = 0; i < books.Count; i++)
         {
-          lines += $"{i + 1}. {books[i].Title}\nАвтор: {books[i].Author}\n";
+          lines += $"{i + 1}. {books[i].Title} \n";
           list.Add(new List<InlineKeyboardButton>(new[]
             {
               InlineKeyboardButton.WithCallbackData(text: $"{i+1}", callbackData: $"/myLibraryBook {books[i].Id}")
