@@ -126,7 +126,7 @@ namespace FinalTask
       DBInteraction.UpdateUserMark(currentUser.Id, User.Status.OnStart);
       await botClient.SendTextMessageAsync(
         message.Chat,
-        $"Пользователь - {currentUser.Name}, добавлен в библиотеку.",
+        $"Пользователь - {message.Text}, добавлен в библиотеку.",
         cancellationToken: cancellationToken);
       currentUser.Mark = User.Status.OnStart;
     }
